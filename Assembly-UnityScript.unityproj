@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{CD6ED2A2-4BC7-85FF-FFB8-417C13491130}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-UnityScript</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+	<BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_OSX;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_GAMECENTER;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_4;UNITY_4_3;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="System.Xml.Linq" />
+	<Reference Include="UnityEngine">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\CameraMover.js" />
+     <Compile Include="Assets\Creator\ActivateMachine.js" />
+     <Compile Include="Assets\Creator\ChangeMotorDirection.js" />
+     <Compile Include="Assets\Creator\CreatorControl.js" />
+     <Compile Include="Assets\Creator\CreatorGUI.js" />
+     <Compile Include="Assets\Creator\DeleteButton.js" />
+     <Compile Include="Assets\Creator\LinkerButton.js" />
+     <Compile Include="Assets\Creator\MachinePieceAddButton.js" />
+     <Compile Include="Assets\Creator\RotateObjectButton.js" />
+     <Compile Include="Assets\Creator\RotationGrabber.js" />
+     <Compile Include="Assets\Creator\SaveLoad\MachineDesignManager.js" />
+     <Compile Include="Assets\Creator\SaveLoad\PieceDictionary.js" />
+     <Compile Include="Assets\Creator\SaveLoad\PieceTreeNode.js" />
+     <Compile Include="Assets\Creator\SaveLoad\Serialization.js" />
+     <Compile Include="Assets\Creator\StartGravity.js" />
+     <Compile Include="Assets\MachinePieces\Arm2Connector.js" />
+     <Compile Include="Assets\MachinePieces\ArmConnector.js" />
+     <Compile Include="Assets\MachinePieces\Arrow.js" />
+     <Compile Include="Assets\MachinePieces\CompleteFixedJoint.js" />
+     <Compile Include="Assets\MachinePieces\Connector.js" />
+     <Compile Include="Assets\MachinePieces\CubePieceClickInteraction.js" />
+     <Compile Include="Assets\MachinePieces\CubePieceConnector.js" />
+     <Compile Include="Assets\MachinePieces\GrabberPieceConnector.js" />
+     <Compile Include="Assets\MachinePieces\LegConnector.js" />
+     <Compile Include="Assets\MachinePieces\MachinePieceAttachments.js" />
+     <Compile Include="Assets\MachinePieces\MouseOverHighlight.js" />
+     <Compile Include="Assets\MachinePieces\PistonConnector.js" />
+     <Compile Include="Assets\MachinePieces\PressurePlateConnector.js" />
+     <Compile Include="Assets\MachinePieces\RocketConnector.js" />
+     <Compile Include="Assets\MachinePieces\RotationPlateConnector.js" />
+     <Compile Include="Assets\MachinePieces\ShockPlateConnector.js" />
+     <Compile Include="Assets\MachinePieces\WheelPieceConnector.js" />
+     <Compile Include="Assets\MainMenu\MainMenuGUI.js" />
+     <Compile Include="Assets\PlaneColor.js" />
+     <Compile Include="Assets\RobotPieces\BattleManager.js" />
+     <Compile Include="Assets\RobotPieces\BombCannonConnector.js" />
+     <Compile Include="Assets\RobotPieces\BombProjectileManager.js" />
+     <Compile Include="Assets\RobotPieces\CameraRobotFollower.js" />
+     <Compile Include="Assets\RobotPieces\ChasisConnector.js" />
+     <Compile Include="Assets\RobotPieces\HammerConnector.js" />
+     <Compile Include="Assets\RobotPieces\HealthManager.js" />
+     <Compile Include="Assets\RobotPieces\HoverPlateConnector.js" />
+     <Compile Include="Assets\RobotPieces\HoverPlateMotionController.js" />
+     <Compile Include="Assets\RobotPieces\KeyBindedActivator.js" />
+     <Compile Include="Assets\RobotPieces\MachineGunConnector.js" />
+     <Compile Include="Assets\RobotPieces\MotionController.js" />
+     <Compile Include="Assets\RobotPieces\NewBehaviourScript.js" />
+     <Compile Include="Assets\RobotPieces\NewBehaviourScript1.js" />
+     <Compile Include="Assets\RobotPieces\RocketLauncherConnector.js" />
+     <Compile Include="Assets\RobotPieces\RocketProjectileManager.js" />
+     <Compile Include="Assets\RobotPieces\RotationScrollerScript.js" />
+     <Compile Include="Assets\RobotPieces\SawBladeConnector.js" />
+     <Compile Include="Assets\RobotPieces\TestDummyManager.js" />
+     <Compile Include="Assets\RobotPieces\ThrusterConnector.js" />
+     <Compile Include="Assets\RobotPieces\TreadPlateMotionController.js" />
+     <Compile Include="Assets\RobotPieces\TreadplateConnector.js" />
+     <Compile Include="Assets\RobotPieces\Wheel3Connector.js" />
+     <Compile Include="Assets\RobotPieces\Wheel4Connector.js" />
+     <Compile Include="Assets\RobotPieces\WheelAxisConnector.js" />
+     <Compile Include="Assets\RobotPieces\WheelAxisConnector2.js" />
+     <Compile Include="Assets\RobotPieces\WheelAxisMotionControl2.js" />
+     <Compile Include="Assets\RobotPieces\WheelAxisMotionControl3.js" />
+     <Compile Include="Assets\RobotPieces\WheelAxisMotionController.js" />
+     <Compile Include="Assets\RobotPieces\WheelAxisSubConnector.js" />
+     <Compile Include="Assets\RobotPieces\WheelConnector2.js" />
+     <Compile Include="Assets\buttonClick.js" />
+     <Compile Include="Assets\clickScript.js" />
+     <Compile Include="Assets\collisionTest.js" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
