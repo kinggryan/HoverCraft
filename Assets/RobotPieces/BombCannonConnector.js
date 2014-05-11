@@ -88,7 +88,7 @@ public class BombCannonConnector extends Connector
 	
 	function Reload()
 	{
-		yield WaitForSeconds(1.8);
+		yield WaitForSeconds(1.4);
 		loaded = true;
 	}
 }

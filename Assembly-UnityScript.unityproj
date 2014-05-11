@@ -79,6 +79,7 @@
      <Compile Include="Assets\MachinePieces\ShockPlateConnector.js" />
      <Compile Include="Assets\MachinePieces\WheelPieceConnector.js" />
      <Compile Include="Assets\MainMenu\MainMenuGUI.js" />
+     <Compile Include="Assets\Multiplayer\MultiplayerGUI.js" />
      <Compile Include="Assets\PlaneColor.js" />
      <Compile Include="Assets\RobotPieces\BattleManager.js" />
      <Compile Include="Assets\RobotPieces\BombCannonConnector.js" />
@@ -92,8 +93,10 @@
      <Compile Include="Assets\RobotPieces\KeyBindedActivator.js" />
      <Compile Include="Assets\RobotPieces\MachineGunConnector.js" />
      <Compile Include="Assets\RobotPieces\MotionController.js" />
+     <Compile Include="Assets\RobotPieces\MultiRocketLauncherConnector.js" />
      <Compile Include="Assets\RobotPieces\NewBehaviourScript.js" />
      <Compile Include="Assets\RobotPieces\NewBehaviourScript1.js" />
+     <Compile Include="Assets\RobotPieces\PuncherConnector.js" />
      <Compile Include="Assets\RobotPieces\RocketLauncherConnector.js" />
      <Compile Include="Assets\RobotPieces\RocketProjectileManager.js" />
      <Compile Include="Assets\RobotPieces\RotationScrollerScript.js" />

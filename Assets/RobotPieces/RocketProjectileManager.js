@@ -2,11 +2,10 @@
 
 private var rocketOn;
 public var relatedBM : BattleManager;
+public var explosionEffect : GameObject;
 
 function ActivateCollisions()
 {	
-	// reactivate collisions
-	//collider.enabled = false;
 	collider.enabled = true;
 };
 
@@ -18,14 +17,20 @@ function StopAcceleration()
 }
 
 function Start () {
-	collider.enabled = false;
 	rocketOn = true;
 	rigidbody.useGravity = false;
 		
-	Invoke("ActivateCollisions",.1);
+	Physics.IgnoreCollision(collider,relatedBM.collider);
+	var machPieces: MachinePieceAttachments = relatedBM.GetComponent("MachinePieceAttachments");
+	
+	for(var currObj : GameObject in machPieces.connectedObjects)
+		if(currObj != null && currObj.collider != null)
+			Physics.IgnoreCollision(collider,currObj.collider);
+		
 	Invoke("StopAcceleration",.8);
 	
 	rigidbody.AddRelativeForce(Vector3(0,200,0));
+	rigidbody.velocity = relatedBM.rigidbody.velocity;
 }
 
 function OnCollisionEnter(collision:Collision)
@@ -44,6 +49,8 @@ function OnCollisionEnter(collision:Collision)
 					relatedBM.CauseDamage(otherBM);
 			}
 	}
+	
+	GameObject.Destroy(GameObject.Instantiate(explosionEffect,transform.position,Quaternion.identity),1.5);
 	
 	GameObject.Destroy(gameObject);
 }

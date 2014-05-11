@@ -1,5 +1,7 @@
 ﻿#pragma strict
 
+class HoverPlateMotionController extends MotionController {
+
 private var lifter : ConstantForce;
 private var upwardsCorrectionAccelerations : float[];
 private var downwardsCorrectionAccelerations : float[];
@@ -7,7 +9,7 @@ private var downwardsCorrectionAccelerations : float[];
 //private var downwardsCorrectionAcceleration = 0.2;
 private var previousPoints : Vector3[];
 private var previousDistances : float[];
-private var ADJUSTMENT_CORRECTION_CHANGE_RATE = .8; //.24;
+private var ADJUSTMENT_CORRECTION_CHANGE_RATE = 10; //.24;
 private var MAXIMUM_FORWARD_VELOCITY = 40;
 private var MAXIMUM_TURN_RATE = 2;
 private var MAXIMUM_STRAFE_VELOCITY = 30;
@@ -84,18 +86,31 @@ function FixedUpdate()
 	}
 	
 	// do player controlled movement
-	var hMove = Input.GetAxis("Horizontal");
-	var	vMove = Input.GetAxis("Vertical");
-	var strafe : int;
-	if(Input.GetKey("q"))
-		strafe = -1;
-	else if (Input.GetKey("e"))
-		strafe = 1;
+//	var hMove = Input.GetAxis("Horizontal");
+//	var	vMove = Input.GetAxis("Vertical");
+	var hMove : int = 0;
+	var vMove : int = 0;
+	var strafe : int = 0;
+	
+	if(Input.GetKey(kForward))
+		vMove = 1;
+	if(Input.GetKey(kBackward))
+		vMove -= 1;
+	if(Input.GetKey(kTurnRight))
+		hMove += 1;
+	if(Input.GetKey(kTurnLeft))
+		hMove -= 1;
+	if(Input.GetKey(kStrafeRight))
+		strafe += 1;
+	if(Input.GetKey(kStrafeLeft))
+		strafe -= 1;
 	
 	// add force based on the desired motion compared to the current motion // -3.96
 	rigidbody.AddRelativeForce(Vector3(0,0,36*(MAXIMUM_FORWARD_VELOCITY*vMove - transform.InverseTransformDirection(rigidbody.velocity).z)));
 	rigidbody.AddForceAtPosition(transform.TransformDirection(Vector3(0,-7.92*(MAXIMUM_FORWARD_VELOCITY*vMove - transform.InverseTransformDirection(rigidbody.velocity).z),0)),transform.TransformPoint(Vector3(0,0,1)));
-	rigidbody.AddRelativeTorque(Vector3(0,60*(MAXIMUM_TURN_RATE*hMove - transform.InverseTransformDirection(rigidbody.angularVelocity).y)),0);
+	rigidbody.AddRelativeTorque(Vector3(0,200*(MAXIMUM_TURN_RATE*hMove - transform.InverseTransformDirection(rigidbody.angularVelocity).y)),0);
 	rigidbody.AddRelativeForce(Vector3(36*(MAXIMUM_STRAFE_VELOCITY*strafe - transform.InverseTransformDirection(rigidbody.velocity).x),0,0));
 	rigidbody.AddForceAtPosition(transform.TransformDirection(Vector3(0,-10.2*(MAXIMUM_STRAFE_VELOCITY*strafe - transform.InverseTransformDirection(rigidbody.velocity).x),0)),transform.TransformPoint(Vector3(1,0,0)));
+}
+
 }

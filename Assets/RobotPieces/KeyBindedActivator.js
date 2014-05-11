@@ -1,7 +1,7 @@
 ﻿#pragma strict
 
 public var key : String;
-private var attachedPiece : Connector;
+public var attachedPiece : Connector;
 
 function Start()
 {

@@ -22,6 +22,7 @@ function CauseDamage (collidedObj : BattleManager)
 function ReceiveDamage (damage : int)
 {
 	currentHealth -= damage;
+	renderer.material.color = Color(1,1.0*currentHealth/pieceMaxHealth,1.0*currentHealth/pieceMaxHealth,1);
 	
 	// weaken associated joint
 	if(associatedJoint != null)
@@ -57,6 +58,7 @@ function OnJointBreak()
 {
 	Debug.Log("joint broken from " + gameObject);
 	Physics.IgnoreCollision(collider,associatedJoint.connectedBody.collider,false);
+	Destroy(GetComponent("KeyBindedActivator"));
 }
 
 function EnableDisableInTime(time : int , on : boolean)

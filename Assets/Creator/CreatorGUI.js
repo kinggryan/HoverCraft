@@ -8,6 +8,7 @@ public var LARGE_GUI_BUTTON_SIZE : Vector2 = Vector2(75,100);
 public var SMALL_GUI_BUTTON_SIZE : Vector2 = Vector2(75,50);
 public var GUI_BUTTON_OFFSET : int = 25;
 private var saveFileName : String = "MyDesign";
+private var keyActivatorString : String = "1";
 
 function Start() {
 	if(!Directory.Exists("MachineDesigns"))
@@ -66,6 +67,14 @@ function OnGUI() {
 	}
 	
 	yPlacement += 60;
+	
+	keyActivatorString = GUI.TextField(Rect(25,yPlacement,150,25),keyActivatorString,1);
+	yPlacement += 35;
+	if(GUI.Button(Rect(25,yPlacement,150,50),"Add Key Activator")) {
+		getController = GameObject.Find("MainCreatorControl").GetComponent("CreatorControl");
+		getController.actionMode = 6;
+		getController.activatorKey = keyActivatorString;
+	}
 }
 
 function FixName(string : String) {

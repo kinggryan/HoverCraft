@@ -27,8 +27,10 @@ function Connect(blockObject : GameObject, relativePosition : Vector3, rotation 
 		mainJoint.connectedBody = blockObject.rigidbody;
 		
 		var machinePieceInfo : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
-		for(var currObj : GameObject in machinePieceInfo.connectedObjects)
+		for(var currObj : GameObject in machinePieceInfo.connectedObjects) {
 			currObj = blockObject;
+			Physics.IgnoreCollision(collider,blockObject.collider);
+		}
 }
 
 // Called when we want a ONE TIME activation of the piece
@@ -73,6 +75,12 @@ function OnMouseDown()
 		
 		// destroy self
 		GameObject.Destroy(gameObject);
+	}
+	else if(ccc.actionMode == 6) { // add keybinded activator
+		var tempActivator = GetComponent("KeyBindedActivator");
+		if(tempActivator != null)
+			Destroy(tempActivator);
+		ccc.AddKeyBindedActivator(this);
 	}
 }
 
@@ -150,3 +158,6 @@ function EnableDisableMotor(mode : boolean)
 
 function DeActivate()
 {}
+
+function AddMotionController() : MotionController
+{ return null; }

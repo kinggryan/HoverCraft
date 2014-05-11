@@ -1,13 +1,11 @@
 ﻿#pragma strict
 
-public var testObj : GameObject;
 static public var loadFlag : boolean = false;
 static public var loadFileName : String;
 
 function Start () {
 	// Set up piece dictionary
 	PieceDictionary.InitializeDictionary();
-	//Debug.Log(AssetDatabase.GetAssetPath(testObj));
 	
 	if(loadFlag)
 		LoadMachineDesign(loadFileName);
@@ -76,18 +74,20 @@ static function BuildTreeRecursive(piece : GameObject, node : PieceTreeNode)
 	var activatorString : String;
 	if(activator != null)
 	{
-		activatorString = RemoveClone(activator.ToString());
+		Debug.Log("Setting activator to : "+activator);
+		activatorString = FixActivatorName(activator.ToString());
 		activatorKey = activator.key[0];
+		Debug.Log("Index in piece dictionary for this activator : "+PieceDictionary.GetIndexFromPieceType(activator));
 	}
 	else
 	{
 		activatorString = null;
 		activatorKey = 0;
 	}
-		
+				
 //	Debug.Log("Pretest: " + AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject));
 //	Debug.Log("Test : " +PieceDictionary.GetIndexFromPieceType(AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject)));
-	node.SetData(PieceDictionary.GetIndexFromPieceType(AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject)),piece.transform.position,piece.transform.rotation,PieceDictionary.GetIndexFromPieceType(activator),activatorKey);
+	node.SetData(PieceDictionary.GetIndexFromPieceType(AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject)),piece.transform.position,piece.transform.rotation,PieceDictionary.GetIndexFromPieceType(activatorString),activatorKey);
 	
 	// add children nodes
 	var machinePieces : MachinePieceAttachments = piece.GetComponent(MachinePieceAttachments);
@@ -118,12 +118,17 @@ static function BuildMachineFromTree(rootNode : PieceTreeNode){
 	Debug.Log("Pieces cleared");
 	var ccc : CreatorControl = GameObject.Find("MainCreatorControl").GetComponent("CreatorControl");
 	Debug.Log("Root node : "+rootNode + " and piece type : "+rootNode.pieceType);
-	ccc.rootPiece = rootNode.ConstructSelfAndChildren(null);
+	ccc.rootPiece = rootNode.ConstructSelfAndChildren(null,Vector3.zero);
 	for(currPiece in GameObject.FindGameObjectsWithTag("piece")){
 		currPiece.rigidbody.freezeRotation = true;
 		currPiece.rigidbody.detectCollisions = false;
 	}
 	Debug.Log("Construction Complete");
+}
+
+// Constructs a machine from Tree and returns the rootPiece
+static function BuildMachineFromTreeForMultiplayer(rootNode : PieceTreeNode, offset : Vector3) {
+	return (rootNode.ConstructSelfAndChildren(null, offset));
 }
 
 static function TestSave()
@@ -147,6 +152,14 @@ static function RemoveClone(string : String) : String {
 	return string.Substring(0, string.IndexOfAny(charArray.ToCharArray()));
 }
 
+static function FixActivatorName(string : String) : String {
+	var charArray : String = "(";
+	var endChar : String = ")";
+	// get string between final two parens
+	Debug.Log("Fixing : "+ string + " length of " + string.length + ", with last ( at : "+string.LastIndexOf("(")+ " and " +string.LastIndexOf(")"));
+	return string.Substring(string.LastIndexOf("(")+1,string.LastIndexOf(")")-string.LastIndexOf("(")-1);
+}
+
 static function SaveMachineDesign(fileName : String) {
 	var rootNode = ConstructTreeFromGame();
 	SaveLoad.SaveMachineDesign(Application.dataPath+"/MachineDesigns/"+fileName,rootNode);
@@ -155,4 +168,46 @@ static function SaveMachineDesign(fileName : String) {
 static function LoadMachineDesign(fileName : String) {
 	var data = SaveLoad.LoadMachineDesign(Application.dataPath+"/MachineDesigns/"+fileName);
 	BuildMachineFromTree(data.rootNode);
+}
+
+// build two machines at given offsets and set their control schemes
+static function LoadMachineDesignsForTwoPlayers(p1Design : String, p2Design : String, p1StartPosition : Vector3, p2StartPosition : Vector3) {
+	var p1Data = SaveLoad.LoadMachineDesign(Application.dataPath+"/MachineDesigns/"+p1Design);
+	var p1Root = BuildMachineFromTreeForMultiplayer(p1Data.rootNode,p1StartPosition);
+	
+	Debug.Log("Player 1 built");
+	
+	var p2Data = SaveLoad.LoadMachineDesign(Application.dataPath+"/MachineDesigns/"+p2Design);
+	var p2Root = BuildMachineFromTreeForMultiplayer(p2Data.rootNode,p2StartPosition);
+	
+	Debug.Log("Player 2 built");
+	
+	//destroy static camera and add split screen cameras
+	var camera1 : Camera = Instantiate(GameObject.Find("Main Camera"),Vector3.zero,Quaternion.identity).GetComponent("Camera");
+	var camera2 : Camera = Instantiate(GameObject.Find("Main Camera"),Vector3.zero,Quaternion.identity).GetComponent("Camera");
+	GameObject.Destroy(GameObject.Find("Main Camera"), 0);
+
+	var height = camera1.pixelHeight/2;
+	var width = camera1.pixelWidth;
+	
+	camera1.pixelRect = Rect(0,0,width,height);
+	camera2.pixelRect = Rect(0,height,width,height);
+
+	var follower : CameraRobotFollower = camera1.gameObject.AddComponent("CameraRobotFollower");
+	follower.objToFollow = p1Root;
+	var connector : Connector = p1Root.GetComponent("Connector");
+	var p1Controller : MotionController = connector.AddMotionController();
+	
+	follower = camera2.gameObject.AddComponent("CameraRobotFollower");
+	follower.objToFollow = p2Root;
+	connector = p2Root.GetComponent("Connector");
+	var p2Controller : MotionController = connector.AddMotionController();
+	
+	// set Player 2 controls
+	p2Controller.kForward = "i";
+	p2Controller.kBackward = "k";
+	p2Controller.kTurnLeft = "j";
+	p2Controller.kTurnRight = "l";
+	p2Controller.kStrafeRight = "o";
+	p2Controller.kStrafeLeft = "u";
 }

@@ -39,4 +39,9 @@ public class HoverPlateConnector extends Connector
 			ccc.AddPieceToArm(gameObject, gameObject,Vector3(0,.05,0),Vector3.up);
 		}
 	}
+	
+	function AddMotionController() : MotionController {
+		var cntlr : MotionController = gameObject.AddComponent("HoverPlateMotionController");
+		return(cntlr);
+	}
 }

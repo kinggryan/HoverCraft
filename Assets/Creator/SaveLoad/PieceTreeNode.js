@@ -97,7 +97,6 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 			
 			newChildNode.RecursivelyReconstructFromFile(info,ctxt,info.GetValue("children_"+id+"_"+i,typeof(int)));
 		//	AddChild(newChildNode);
-			Debug.Log("Pushing child : "+newChildNode);
 		}
 	}
 	
@@ -147,28 +146,31 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 	
 	// Constructs this machine from load and children. Returns the game object that was created - this way, we can set
 	// machine pieces attachments of the parent upon return.
-	function ConstructSelfAndChildren(parent : GameObject) : GameObject {
+	function ConstructSelfAndChildren(parent : GameObject, offset : Vector3) : GameObject {
 		//var pieceType = AssetDatabase.LoadAssetAtPath(PieceDictionary.GetPieceTypeFromIndex(pieceType)+".prefab",GameObject);
 		var pieceDataType : GameObject = PieceDictionary.GetPieceTypeFromIndex(pieceType);
 		var activatorType : String = PieceDictionary.GetPieceTypeFromIndex(activator);
 		var newObj : GameObject;
 		
-		Debug.Log("Constructing " + pieceDataType +"with rotation " +rotation);
-		Debug.Log("Identity Rotation : " + Quaternion.identity);
+		Debug.Log("Constructing " + pieceDataType);
 		
 		if(parent == null) {
-			newObj = GameObject.Instantiate(pieceDataType,position, rotation);
+			newObj = GameObject.Instantiate(pieceDataType,position+offset, rotation);
 		}
 		else {
-			newObj = GameObject.Instantiate(pieceDataType,position,rotation);
+			newObj = GameObject.Instantiate(pieceDataType,position+offset,rotation);
 			var connector : Connector = newObj.GetComponent("Connector");
-			connector.Connect(parent,position,rotation);
+			connector.Connect(parent,position+offset,rotation);
 		} // else we have a parent, so construct and connect
 		
 		if(activatorType != null) { // if there's some activator
+			Debug.Log("Making activator: " +activatorKey);
 			var act : KeyBindedActivator = newObj.AddComponent(activatorType);
 			act.key = ""+activatorKey;
+			act.attachedPiece = newObj.GetComponent("Connector");
 		}
+		else
+			Debug.Log("No activator found");
 		
 		var machPieces : MachinePieceAttachments = newObj.GetComponent("MachinePieceAttachments");
 		machPieces.clearAttachments();
@@ -179,8 +181,7 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 		for(var i = 0 ; i < children.length ; i++) {
 			var child : PieceTreeNode = children[i];
 			
-			Debug.Log("Attempting to construct child : "+child);
-			machPieces.connectedObjects[i] = child.ConstructSelfAndChildren(newObj);
+			machPieces.connectedObjects[i] = child.ConstructSelfAndChildren(newObj,offset);
 		}
 		
 		// return newly constructed object for parental connectedobjects

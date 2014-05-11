@@ -7,6 +7,7 @@ private var linkedObj : Connector;
 public var rootPiece : GameObject;
 public var motionControllerType : MonoScript;
 public var chasisType : GameObject;
+public var activatorKey : String;
 
 function Start () {
 //	machinePieceToCreate = null;
@@ -100,6 +101,12 @@ function LinkObjects(piece : Connector)
 		piece.LinkPiece(linkedObj);
 		linkedObj = null;
 	}	
+}
+
+// Adds a keybinded activator to a piece
+function AddKeyBindedActivator(piece : Connector) {
+	var kba : KeyBindedActivator = piece.gameObject.AddComponent("KeyBindedActivator");
+	kba.key = activatorKey;
 }
 
 // Fixed Game Camera Behind Machine

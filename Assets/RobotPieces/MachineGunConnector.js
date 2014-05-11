@@ -94,7 +94,7 @@ public class MachineGunConnector extends Connector
 		{
 			var hitInfo : RaycastHit;
 			// Generate the variation for the fire
-			var fireChangeAmount = Random.Range(0,.5);
+			var fireChangeAmount = Random.Range(0,2);
 			var fireChangeDirection = Random.Range(0,360);
 			
 			// Fire and check collisions

@@ -18,6 +18,7 @@ class PieceDictionary{
 			pieceIndexTable.Add(3,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/RocketLauncher.prefab",GameObject));
 			pieceIndexTable.Add(4,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Sawblade.prefab",GameObject));
 			pieceIndexTable.Add(5,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Thruster.prefab",GameObject));
+			pieceIndexTable.Add(6,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/MultiRocketLauncher.prefab",GameObject));
 			pieceIndexTable.Add(100,"KeyBindedActivator");
 			
 			initialized = true;
@@ -51,12 +52,10 @@ class PieceDictionary{
 	// Given a piece index, find the piece Type
 	static function GetPieceTypeFromIndex(index : int) {
 		if(index == -1) {
-			Debug.Log("No piece type found for index : "+index);
 			return null;
 		}
 	
 		if(initialized) {
-			Debug.Log("For index : " + index +" found value "+pieceIndexTable[index]);
 			return pieceIndexTable[index];
 		}
 		else {

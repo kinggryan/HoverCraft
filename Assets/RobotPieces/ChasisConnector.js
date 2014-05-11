@@ -63,4 +63,20 @@ public class ChasisConnector extends Connector
 		ccc.AddPieceToBlock(gameObject,clickPoint,Vector3.up,connectedCount);
 		connectedCount++;
 	}	
+	
+	function AddMotionController() : MotionController {
+		var machinePieceInfo : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
+		var returnValue;
+		for(piece in machinePieceInfo.connectedObjects) {
+			if(piece != null) {
+				var connector : Connector = piece.GetComponent("Connector");
+				var tempValue = connector.AddMotionController();
+				if (tempValue != null)
+					returnValue = tempValue;
+			}
+		}
+		
+		Debug.Log("RETURN VALUE : "+returnValue);
+		return returnValue;
+	}
 }
