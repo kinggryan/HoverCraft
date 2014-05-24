@@ -3,6 +3,8 @@
 protected var motorDirection : int;
 protected var linkedPieces : Array;
 public var mainJoint : Joint;		// this joint should link the piece to its parent body. Initialized as null.
+protected var connectedCount : int;
+
 
 function Start () {
 	motorDirection = -1;
@@ -67,6 +69,8 @@ function OnMouseDown()
 		var machPieces : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
 		for(var currObj in machPieces.connectedObjects)
 		{
+			var connector : Connector = currObj.GetComponent("Connector");
+			connector.connectedCount--;
 			var otherMachPieces : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
 			for(var index = 0 ; index < otherMachPieces.numberOfConnectedObjects ; index++)
 				if(otherMachPieces.connectedObjects[index] == gameObject)

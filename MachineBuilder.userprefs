@@ -1,13 +1,13 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Multiplayer/MultiplayerGUI.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/RobotPieces/HoverPlateMotionController.js">
     <Files>
-      <File FileName="Assets/Multiplayer/MultiplayerGUI.js" Line="29" Column="50" />
-      <File FileName="Assets/Creator/CreatorGUI.js" Line="17" Column="19" />
-      <File FileName="Assets/Creator/SaveLoad/MachineDesignManager.js" Line="2" Column="1" />
-      <File FileName="Assets/Creator/SaveLoad/PieceTreeNode.js" Line="160" Column="52" />
-      <File FileName="Assets/MachinePieces/MachinePieceAttachments.js" Line="19" Column="1" />
-      <File FileName="Assets/MachinePieces/MouseOverHighlight.js" Line="6" Column="1" />
+      <File FileName="Assets/RobotPieces/MachineGunConnector.js" Line="46" Column="2" />
+      <File FileName="Assets/RobotPieces/BattleManager.js" Line="101" Column="143" />
+      <File FileName="Assets/RobotPieces/BombCannonConnector.js" Line="29" Column="1" />
+      <File FileName="Assets/RobotPieces/MultiRocketLauncherConnector.js" Line="102" Column="28" />
+      <File FileName="Assets/RobotPieces/HoverPlateConnector.js" Line="1" Column="1" />
+      <File FileName="Assets/RobotPieces/HoverPlateMotionController.js" Line="109" Column="15" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

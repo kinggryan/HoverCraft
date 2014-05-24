@@ -13,6 +13,7 @@ private var ADJUSTMENT_CORRECTION_CHANGE_RATE = 10; //.24;
 private var MAXIMUM_FORWARD_VELOCITY = 40;
 private var MAXIMUM_TURN_RATE = 2;
 private var MAXIMUM_STRAFE_VELOCITY = 30;
+private var BACKWARDS_TO_FORWARDS_SPEED_RATIO = .5;
 
 function Start()
 {
@@ -42,6 +43,8 @@ function Start()
 		if(i == 1)
 			liftPoint.z *= -1;
 	} 
+	
+	//rigidbody.centerOfMass = Vector3(0,0,.4);
 }
 
 function FixedUpdate()
@@ -95,7 +98,7 @@ function FixedUpdate()
 	if(Input.GetKey(kForward))
 		vMove = 1;
 	if(Input.GetKey(kBackward))
-		vMove -= 1;
+		vMove -= 1 * BACKWARDS_TO_FORWARDS_SPEED_RATIO;
 	if(Input.GetKey(kTurnRight))
 		hMove += 1;
 	if(Input.GetKey(kTurnLeft))
@@ -110,6 +113,7 @@ function FixedUpdate()
 	rigidbody.AddForceAtPosition(transform.TransformDirection(Vector3(0,-7.92*(MAXIMUM_FORWARD_VELOCITY*vMove - transform.InverseTransformDirection(rigidbody.velocity).z),0)),transform.TransformPoint(Vector3(0,0,1)));
 	rigidbody.AddRelativeTorque(Vector3(0,200*(MAXIMUM_TURN_RATE*hMove - transform.InverseTransformDirection(rigidbody.angularVelocity).y)),0);
 	rigidbody.AddRelativeForce(Vector3(36*(MAXIMUM_STRAFE_VELOCITY*strafe - transform.InverseTransformDirection(rigidbody.velocity).x),0,0));
+//	rigidbody.AddForceAtPosition(transform.TransformDirection(Vector3(36*(MAXIMUM_STRAFE_VELOCITY*strafe - transform.InverseTransformDirection(rigidbody.velocity).x),0,0)),transform.TransformPoint(Mathf.Pow(rigidbody.centerOfMass.magnitude,2)*rigidbody.centerOfMass));
 	rigidbody.AddForceAtPosition(transform.TransformDirection(Vector3(0,-10.2*(MAXIMUM_STRAFE_VELOCITY*strafe - transform.InverseTransformDirection(rigidbody.velocity).x),0)),transform.TransformPoint(Vector3(1,0,0)));
 }
 

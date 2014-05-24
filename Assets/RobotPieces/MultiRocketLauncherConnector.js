@@ -7,6 +7,7 @@ public var intraVolleyRocketDelay : float = .15;
 public var reloadTime : float = 1.8;
 public var maximumSpread : float = 7;
 private var loaded = true;
+private var battleManager : BattleManager;
 
 public class MultiRocketLauncherConnector extends Connector
 {
@@ -27,6 +28,10 @@ public class MultiRocketLauncherConnector extends Connector
 		
 		gameObject.AddComponent(KeyBindedActivator).key = "1";
 		loaded = true;
+	}
+	
+	function Start() {
+		battleManager = GetComponent("BattleManager");
 	}
 	
 	function rotatePieceGeneric()
@@ -80,7 +85,7 @@ public class MultiRocketLauncherConnector extends Connector
 	
 	function Activate()
 	{
-		if(loaded)
+		if(loaded && !battleManager.IsOverHeated())
 		{
 			loaded = false;
 			
@@ -94,6 +99,7 @@ public class MultiRocketLauncherConnector extends Connector
 			}
 			
 			StartCoroutine("Reload");
+			battleManager.AddHeat();
 		}
 	}
 	

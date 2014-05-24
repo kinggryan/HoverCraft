@@ -10,6 +10,14 @@ public var collisionDamageInterval : float;			// amount of time between damage c
 public var damageEnabled : boolean;				// whether the piece can deal damage now or not
 public var currentHealth : int;					// the current health of the piece	
 
+// variables for dealing with overheating 5-23-14
+public var overheatRate : int;					// amount the heat increases when fired
+public var cooldownRate : int;					// the amount of heat the weapon loses per second. Keep in mind, overheat rate must be greater than this.
+public var maximumFireHeat : int;				// when heat reaches this value, the weapon is no longer fireable
+public var cooledHeat : int;					// if the weapon is overheated and reaches this heat value, it is no longer overheated and can be fired again.
+private var heat : float = 0;							// how hot the weapon currently is
+private var overHeated : boolean = false;				// if the weapon is currently overheated
+
 function Start () {
 	currentHealth = pieceMaxHealth;
 }
@@ -22,7 +30,7 @@ function CauseDamage (collidedObj : BattleManager)
 function ReceiveDamage (damage : int)
 {
 	currentHealth -= damage;
-	renderer.material.color = Color(1,1.0*currentHealth/pieceMaxHealth,1.0*currentHealth/pieceMaxHealth,1);
+	//renderer.material.color = Color(1,1.0*currentHealth/pieceMaxHealth,1.0*currentHealth/pieceMaxHealth,1);
 	
 	// weaken associated joint
 	if(associatedJoint != null)
@@ -69,3 +77,26 @@ function EnableDisableInTime(time : int , on : boolean)
 
 function DeActivate()
 {}
+
+function IsOverHeated()
+{
+	return overHeated;
+}
+
+function AddHeat() {
+	heat += overheatRate;
+}
+
+function Update() {
+	if(heat > 0) {
+		if(heat > maximumFireHeat)
+			overHeated = true;
+		if(overHeated && heat <= cooledHeat)
+			overHeated = false;
+		heat -= cooldownRate * Time.deltaTime;
+	}
+	else
+		heat = 0;
+		
+	renderer.material.color = Color(1.0,(1.0*maximumFireHeat - heat)/(1.0*maximumFireHeat),(1.0*maximumFireHeat - heat)/(1.0*maximumFireHeat),1);
+}

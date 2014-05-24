@@ -2,8 +2,6 @@
 
 public class ChasisConnector extends Connector
 {
-	private var connectedCount : int;
-
 	// For now, we are initializing connectedCount to 1, as the hoverplate and chasis begin attached to each
 	//		other. This will change in the future.
 	function Start (){

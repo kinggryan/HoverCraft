@@ -2,18 +2,19 @@
 
 public var rotationGrabberType : GameObject;
 public var bulletEffect : ParticleSystem;
-private var readyToFire : boolean;
-private var bulletEffectObject : ParticleSystem;
+private var readyToFire : boolean = true;
+public var bulletEffectObject : ParticleSystem;
+private var battleManager : BattleManager;
 
 public class MachineGunConnector extends Connector
 {
 	function Connect (blockObject : GameObject , attachPoint : Vector3, attachDirection : Vector3){
-		var worldSpaceSide : Vector3 = blockObject.transform.TransformPoint(attachPoint);
+		var worldSpaceSide : Vector3 = blockObject.transform.TransformPoint(attachPoint*1.2);
 		var worldSpaceDir : Vector3 = blockObject.transform.TransformDirection(attachDirection);
 		
 		transform.position = worldSpaceSide;
 		transform.rotation = Quaternion.LookRotation(worldSpaceDir,Vector3(worldSpaceDir.y,worldSpaceDir.z,worldSpaceDir.x));
-		transform.position += .8 * worldSpaceDir;
+	//	transform.position += (transform.position - blockObject.transform.position);
 		GetComponent(FixedJoint).connectedBody = blockObject.rigidbody;
 		
 		// attach to block
@@ -31,6 +32,18 @@ public class MachineGunConnector extends Connector
 		bulletEffectObject = ParticleSystem.Instantiate(bulletEffect,transform.position,Quaternion.LookRotation(transform.up,transform.forward));
 		bulletEffectObject.transform.parent = transform;
 		bulletEffectObject.enableEmission = false;
+	}
+	
+	function Start()
+	{
+		motorDirection = -1;
+		linkedPieces = new Array();
+	
+		bulletEffectObject = ParticleSystem.Instantiate(bulletEffect,transform.position,Quaternion.LookRotation(transform.up,transform.forward));
+		bulletEffectObject.transform.parent = transform;
+		bulletEffectObject.enableEmission = false;
+		
+		battleManager = GetComponent("BattleManager");
 	}
 	
 	function rotatePieceGeneric()
@@ -90,7 +103,7 @@ public class MachineGunConnector extends Connector
 	
 	function FixedActivate()
 	{
-		if(readyToFire)
+		if(readyToFire && !battleManager.IsOverHeated())
 		{
 			var hitInfo : RaycastHit;
 			// Generate the variation for the fire
@@ -112,6 +125,9 @@ public class MachineGunConnector extends Connector
 			}
 				
 			bulletEffectObject.enableEmission = true;
+				
+			// add heat
+			battleManager.AddHeat();
 				
 			// Delay until next firing
 			readyToFire = false;

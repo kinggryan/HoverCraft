@@ -75,6 +75,14 @@ function OnGUI() {
 		getController.actionMode = 6;
 		getController.activatorKey = keyActivatorString;
 	}
+	
+	yPlacement += 60;
+	
+	if(GUI.Button(Rect(25,yPlacement,150,25),"Delete Piece")) {
+		var ccc : CreatorControl = GameObject.Find("MainCreatorControl").GetComponent("CreatorControl");
+		ccc.actionMode = 5;
+		ccc.highlightColor = Color(1,.5,1);
+	}
 }
 
 function FixName(string : String) {

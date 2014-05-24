@@ -19,6 +19,8 @@ class PieceDictionary{
 			pieceIndexTable.Add(4,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Sawblade.prefab",GameObject));
 			pieceIndexTable.Add(5,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Thruster.prefab",GameObject));
 			pieceIndexTable.Add(6,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/MultiRocketLauncher.prefab",GameObject));
+			pieceIndexTable.Add(7,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Puncher.prefab",GameObject));
+			pieceIndexTable.Add(8,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/BombCannon.prefab",GameObject));
 			pieceIndexTable.Add(100,"KeyBindedActivator");
 			
 			initialized = true;

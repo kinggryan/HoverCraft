@@ -2,7 +2,8 @@
 
 public var rotationGrabberType : GameObject;
 public var projectileType : GameObject;
-private var loaded;
+private var loaded = true;
+private var battleManager : BattleManager;
 
 public class BombCannonConnector extends Connector
 {
@@ -23,6 +24,10 @@ public class BombCannonConnector extends Connector
 		
 		gameObject.AddComponent(KeyBindedActivator).key = "1";
 		loaded = true;
+	}
+	
+	function Start() {
+			battleManager = GetComponent("BattleManager");
 	}
 	
 	function rotatePieceGeneric()
@@ -76,19 +81,20 @@ public class BombCannonConnector extends Connector
 	
 	function Activate()
 	{
-		if(loaded)
+		if(loaded && !battleManager.IsOverHeated())
 		{
 			loaded = false;
 			var tempObj = GameObject.Instantiate(projectileType,transform.position,transform.rotation);
 			var tempObjM : BombProjectileManager = tempObj.GetComponent("BombProjectileManager");
 			tempObjM.relatedBM = GetComponent("BattleManager");
 			StartCoroutine("Reload");
+			battleManager.AddHeat();
 		}
 	}
 	
 	function Reload()
 	{
-		yield WaitForSeconds(1.4);
+		yield WaitForSeconds(.8);
 		loaded = true;
 	}
 }

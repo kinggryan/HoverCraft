@@ -4,7 +4,7 @@ public var rotationGrabberType : GameObject;
 public var reloadTime : float;
 public var punchingArm : GameObject;
 public var relatedBM : BattleManager;
-private var loaded;
+private var loaded = true;
 
 public class PuncherConnector extends Connector
 {
