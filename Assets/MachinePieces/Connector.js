@@ -29,10 +29,16 @@ function Connect(blockObject : GameObject, relativePosition : Vector3, rotation 
 		mainJoint.connectedBody = blockObject.rigidbody;
 		
 		var machinePieceInfo : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
+		machinePieceInfo.clearAttachments();
+		machinePieceInfo.connectedObjects[0] = blockObject;
 		for(var currObj : GameObject in machinePieceInfo.connectedObjects) {
 			currObj = blockObject;
 			Physics.IgnoreCollision(collider,blockObject.collider);
 		}
+		
+		machinePieceInfo = blockObject.GetComponent("MachinePieceAttachments");
+		for(var currObj : GameObject in machinePieceInfo.connectedObjects)
+			Physics.IgnoreCollision(collider,blockObject.collider);
 }
 
 // Called when we want a ONE TIME activation of the piece

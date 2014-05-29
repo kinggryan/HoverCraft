@@ -2,10 +2,12 @@
 
 public var key : String;
 public var attachedPiece : Connector;
+public var relatedCamera : GameObject;
 
 function Start()
 {
 	attachedPiece = GetComponent(Connector);
+	relatedCamera = GameObject.Find("Main Camera");
 }
 
 function Update()
@@ -20,7 +22,6 @@ function FixedUpdate()
 {
 	if(Input.GetKey(key))
 	{
-		Debug.Log("Calling activation");
 		attachedPiece.FixedActivate();
 	}
 }

@@ -21,12 +21,15 @@ function Start () {
 	// initialize start body
 	var plate : GameObject = GameObject.Find("HoverPlate");
 	var plateAttachedPieces : MachinePieceAttachments = GameObject.Find("HoverPlate").GetComponent("MachinePieceAttachments");
+	plateAttachedPieces.clearAttachments();
 	plateAttachedPieces.connectedObjects[4] = GameObject.Instantiate(chasisType,plate.transform.TransformPoint(Vector3(0,3.5,0)),plate.transform.rotation);
 	plate.gameObject.GetComponent(FixedJoint).connectedBody = plateAttachedPieces.connectedObjects[4].rigidbody;
 	var otherAttachedPieces : MachinePieceAttachments = plateAttachedPieces.connectedObjects[4].GetComponent("MachinePieceAttachments");
+	otherAttachedPieces.clearAttachments();
 	otherAttachedPieces.connectedObjects[0] = plate.gameObject;
 	//rootPiece = plateAttachedPieces.connectedObjects[4].gameObject;
 	rootPiece = plate;
+	plate.rigidbody.freezeRotation = true;
 }
 
 function AddPieceToBlock(block : GameObject, side : Vector3, direction : Vector3, index : int){

@@ -18,6 +18,8 @@ public var cooledHeat : int;					// if the weapon is overheated and reaches this
 private var heat : float = 0;							// how hot the weapon currently is
 private var overHeated : boolean = false;				// if the weapon is currently overheated
 
+public var contactEffect : GameObject = null;
+
 function Start () {
 	currentHealth = pieceMaxHealth;
 }
@@ -57,6 +59,8 @@ function OnCollisionStay(collision : Collision)
 		{
 			damageEnabled = false;
 			EnableDisableInTime(collisionDamageInterval,true);
+			if(contactEffect != null)
+				GameObject.Destroy(GameObject.Instantiate(contactEffect,transform.position,Quaternion.identity),1.5);
 		}
 	}
 }

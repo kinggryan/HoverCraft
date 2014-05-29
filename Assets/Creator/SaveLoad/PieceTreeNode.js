@@ -174,6 +174,7 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 		
 		var machPieces : MachinePieceAttachments = newObj.GetComponent("MachinePieceAttachments");
 		machPieces.clearAttachments();
+		//machPieces.connectedObjects[0] = parent;
 		
 		Debug.Log("Number of children for this node : "+children.length);
 		
@@ -183,6 +184,8 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 			
 			machPieces.connectedObjects[i] = child.ConstructSelfAndChildren(newObj,offset);
 		}
+		if(parent != null)
+			machPieces.connectedObjects[i] = parent;
 		
 		// return newly constructed object for parental connectedobjects
 		return newObj;

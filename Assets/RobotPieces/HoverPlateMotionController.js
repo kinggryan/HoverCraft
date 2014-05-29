@@ -91,9 +91,9 @@ function FixedUpdate()
 	// do player controlled movement
 //	var hMove = Input.GetAxis("Horizontal");
 //	var	vMove = Input.GetAxis("Vertical");
-	var hMove : int = 0;
-	var vMove : int = 0;
-	var strafe : int = 0;
+	var hMove : float = 0;
+	var vMove : float = 0;
+	var strafe : float = 0;
 	
 	if(Input.GetKey(kForward))
 		vMove = 1;

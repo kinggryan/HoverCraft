@@ -12,7 +12,7 @@ function clearAttachments () {
 }
 
 function Awake () {
-	clearAttachments();
+//n	clearAttachments();
 }
 
 function Update () {

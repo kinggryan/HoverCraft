@@ -61,6 +61,7 @@
      <Compile Include="Assets\Creator\SaveLoad\PieceTreeNode.js" />
      <Compile Include="Assets\Creator\SaveLoad\Serialization.js" />
      <Compile Include="Assets\Creator\StartGravity.js" />
+     <Compile Include="Assets\GameCamera\TargettingCamera.js" />
      <Compile Include="Assets\MachinePieces\Arm2Connector.js" />
      <Compile Include="Assets\MachinePieces\ArmConnector.js" />
      <Compile Include="Assets\MachinePieces\Arrow.js" />
@@ -81,6 +82,7 @@
      <Compile Include="Assets\MainMenu\MainMenuGUI.js" />
      <Compile Include="Assets\Multiplayer\MultiplayerGUI.js" />
      <Compile Include="Assets\PlaneColor.js" />
+     <Compile Include="Assets\RobotPieces\Activators\TargettingActivator.js" />
      <Compile Include="Assets\RobotPieces\BattleManager.js" />
      <Compile Include="Assets\RobotPieces\BombCannonConnector.js" />
      <Compile Include="Assets\RobotPieces\BombProjectileManager.js" />
@@ -117,6 +119,15 @@
      <Compile Include="Assets\buttonClick.js" />
      <Compile Include="Assets\clickScript.js" />
      <Compile Include="Assets\collisionTest.js" />
+     <None Include="Assets\Photon Unity Networking\Demos\MarcoPolo-Tutorial\marcopolo-readme.txt" />
+     <None Include="Assets\Plugins\release_history.txt" />
+     <None Include="Assets\Photon Unity Networking\Demos\DemoBoxes\Resources\eurof_tt.txt" />
+     <None Include="Assets\Photon Unity Networking\readme.txt" />
+     <None Include="Assets\Plugins\Photon3Unity3D.xml" />
+     <None Include="Assets\Photon Unity Networking\changelog.txt" />
+ <Reference Include="Assets\Plugins\Photon3Unity3D">
+ <HintPath>Assets\Plugins\Photon3Unity3D.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

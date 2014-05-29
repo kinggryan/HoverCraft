@@ -26,12 +26,14 @@ public class MachineGunConnector extends Connector
 		Physics.IgnoreCollision(collider,blockObject.collider);
 		
 		gameObject.AddComponent(KeyBindedActivator).key = "1";
+	//	gameObject.AddComponent(TargettingActivator).key = "1";
 		
 		// prepare to fire
 		readyToFire = true;
 		bulletEffectObject = ParticleSystem.Instantiate(bulletEffect,transform.position,Quaternion.LookRotation(transform.up,transform.forward));
 		bulletEffectObject.transform.parent = transform;
 		bulletEffectObject.enableEmission = false;
+		bulletEffectObject.simulationSpace = ParticleSystemSimulationSpace.World;
 	}
 	
 	function Start()
@@ -92,7 +94,7 @@ public class MachineGunConnector extends Connector
 	
 	function DrawRotationArrow()
 	{
-		DrawArrow(transform.position,2*transform.TransformDirection(Vector3.up),Color(1,1,1));
+		DrawArrow(transform.position,4*transform.TransformDirection(Vector3.up),Color(1,1,1));
 	}
 	
 	function ReadyFromFire()
