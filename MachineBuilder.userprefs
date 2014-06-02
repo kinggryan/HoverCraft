@@ -1,14 +1,10 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Creator/CreatorControl.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Multiplayer/Networking/HoverControllerNetwork.js">
     <Files>
-      <File FileName="Assets/RobotPieces/CameraRobotFollower.js" Line="1" Column="1" />
-      <File FileName="Assets/RobotPieces/BattleManager.js" Line="1" Column="1" />
-      <File FileName="Assets/RobotPieces/RotationScrollerScript.js" Line="1" Column="1" />
-      <File FileName="Assets/Creator/CreatorControl.js" Line="8" Column="1" />
-      <File FileName="Assets/MachinePieces/MachinePieceAttachments.js" Line="11" Column="3" />
-      <File FileName="Assets/Photon Unity Networking/readme.txt" Line="1" Column="1" />
-      <File FileName="Assets/Photon Unity Networking/Demos/DemoFriendsAndCustomAuth/GUICustomAuth.cs" Line="1" Column="1" />
+      <File FileName="Assets/Multiplayer/Networking/HoverControllerNetwork.js" Line="22" Column="43" />
+      <File FileName="Assets/Multiplayer/Networking/GameStarter.js" Line="30" Column="53" />
+      <File FileName="../NetworkTest/Assets/Photon Unity Networking/Demos/DemoSynchronization/CubeInter.cs" Line="124" Column="68" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

@@ -1,6 +1,8 @@
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2008
 
+Project("{7835B75B-7535-F2B7-5060-6B87CEF4C270}") = "MachineBuilder", "Assembly-CSharp-firstpass-vs.csproj", "{DE73D428-9F23-8AA9-AF50-C3873963452A}"
+EndProject
 Project("{7835B75B-7535-F2B7-5060-6B87CEF4C270}") = "MachineBuilder", "Assembly-CSharp-vs.csproj", "{4C131830-FAD9-638C-C661-CEDB0B7ACC8B}"
 EndProject
 Project("{7835B75B-7535-F2B7-5060-6B87CEF4C270}") = "MachineBuilder", "Assembly-CSharp-Editor-vs.csproj", "{B8F064B1-FB0D-8F96-0F6A-02EF4203AE11}"
@@ -11,6 +13,10 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{DE73D428-9F23-8AA9-AF50-C3873963452A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE73D428-9F23-8AA9-AF50-C3873963452A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE73D428-9F23-8AA9-AF50-C3873963452A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE73D428-9F23-8AA9-AF50-C3873963452A}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4C131830-FAD9-638C-C661-CEDB0B7ACC8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4C131830-FAD9-638C-C661-CEDB0B7ACC8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4C131830-FAD9-638C-C661-CEDB0B7ACC8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -23,7 +29,7 @@ Global
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-																																																																																																																																																																																			GlobalSection(MonoDevelopProperties) = preSolution
+																																																																																																																																																																																																											GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = Assembly-CSharp.csproj
 		Policies = $0
 		$0.TextStylePolicy = $1

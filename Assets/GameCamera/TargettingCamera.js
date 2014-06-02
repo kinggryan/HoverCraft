@@ -21,7 +21,7 @@ private var mousePosition : Vector2;
 function Start () {
 	transform.position = Vector3(0,8,-12);
 	transform.rotation = Quaternion.LookRotation( objToFollow.transform.position - transform.position,Vector3.up);
-	crosshair = AssetDatabase.LoadAssetAtPath("Assets/GameCamera/crosshair.png",Texture);
+//	crosshair = AssetDatabase.LoadAssetAtPath("Assets/GameCamera/crosshair.png",Texture);
 	Screen.showCursor = false;
 	
 	// attach configurable joint in place of fixed joint

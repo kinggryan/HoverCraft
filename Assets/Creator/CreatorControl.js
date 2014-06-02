@@ -5,7 +5,7 @@ public var actionMode : int;
 public var highlightColor : Color;
 private var linkedObj : Connector;
 public var rootPiece : GameObject;
-public var motionControllerType : MonoScript;
+public var motionControllerType : MonoBehaviour;
 public var chasisType : GameObject;
 public var activatorKey : String;
 

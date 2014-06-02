@@ -12,7 +12,7 @@ class PieceDictionary{
 	// initialize values for all pieces in the hashtable.
 	static function InitializeDictionary(){
 		if(!initialized) {
-			pieceIndexTable.Add(0,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/ChasisA.prefab",GameObject));
+/*			pieceIndexTable.Add(0,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/ChasisA.prefab",GameObject));
 			pieceIndexTable.Add(1,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/HoverPlate.prefab",GameObject));
 			pieceIndexTable.Add(2,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/MachineGun.prefab",GameObject));
 			pieceIndexTable.Add(3,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/RocketLauncher.prefab",GameObject));
@@ -20,7 +20,7 @@ class PieceDictionary{
 			pieceIndexTable.Add(5,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Thruster.prefab",GameObject));
 			pieceIndexTable.Add(6,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/MultiRocketLauncher.prefab",GameObject));
 			pieceIndexTable.Add(7,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Puncher.prefab",GameObject));
-			pieceIndexTable.Add(8,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/BombCannon.prefab",GameObject));
+			pieceIndexTable.Add(8,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/BombCannon.prefab",GameObject)); */
 			pieceIndexTable.Add(100,"KeyBindedActivator");
 			
 			initialized = true;
