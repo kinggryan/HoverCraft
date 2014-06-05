@@ -126,6 +126,71 @@ class SaveLoad {
 		
 		return data;
 	}
+	
+	// Takes a machine design at the given filepath and turns the file into a string. Used for sending across networks.
+	static function MachineDesignToString(filePath : String) : String {
+		var stream = File.Open(filePath, FileMode.Open);
+		var array : byte[] = new byte[stream.Length];
+		stream.Read(array,0,stream.Length);
+		
+		Debug.Log("Stream Length :  "+ stream.Length);
+		
+	/*	var chars : char[] = new char[array.Length];
+    	System.Buffer.BlockCopy(array, 0, chars, 0, array.Length);
+    	var string = new String(chars); */
+    	var string : String = System.Text.Encoding.Unicode.GetString(array);
+		
+		//var string = new String(array);
+		return string;
+	}
+	
+	// takes a machine design file and returns the data of that file
+	static function MachineDesignToBytes(filePath : String) : byte[] {
+		var stream = File.Open(filePath, FileMode.Open);
+		var array : byte[] = new byte[stream.Length];
+		stream.Read(array,0,stream.Length);
+		return array;
+	}
+	
+	// TODO this
+	static function LoadMachineDesignFromString(remoteData : String) {
+		var localData = new MachineDesignSaveData();
+	
+	/*	var bytes : byte[] = new byte[remoteData.Length];
+		Debug.Log(remoteData.Length);
+		System.Buffer.BlockCopy(remoteData.ToCharArray(), 0, bytes, 0, remoteData.Length); */
+		
+		// remote Data is sent as a unicode array
+		var encoder = new UnicodeEncoding();
+		var bytes = encoder.GetBytes(remoteData.ToCharArray());
+		
+		var stream = new MemoryStream(bytes);
+		
+		Debug.Log("Stream Length " +stream.Length);
+		
+		var bformatter = new BinaryFormatter();
+		bformatter.Binder = new VersionDeserializationBinder();
+		localData = bformatter.Deserialize(stream);
+		stream.Close();
+		
+//		Debug.Log("Machine Design Loaded with root node " + data.rootNode +" and first child : " + data.rootNode.children[0]);
+		
+		return localData;
+	}
+	
+	// Takes raw byte data of a machine design and constructs a tree
+	static function LoadMachineDesignFromBytes(remoteData : byte[]) {
+		var localData = new MachineDesignSaveData();
+		
+		var stream = new MemoryStream(remoteData);
+		
+		var bformatter = new BinaryFormatter();
+		bformatter.Binder = new VersionDeserializationBinder();
+		localData = bformatter.Deserialize(stream);
+		stream.Close();
+		
+		return localData;
+	}
 }
 
 class VersionDeserializationBinder extends SerializationBinder

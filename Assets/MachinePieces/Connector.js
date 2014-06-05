@@ -47,6 +47,11 @@ function Activate () {}
 // Called when we want a CONTINUOUS activation of the piece during the physics step
 function FixedActivate() {}
 
+// Called in Networked play
+function ActivateNetworked() {}
+function DeActivateNetworked() {}
+function FixedActivateNetworked() {}
+
 // Changes the direction of the motor
 function ChangeMotorDirection() {
 	// swap motor direction

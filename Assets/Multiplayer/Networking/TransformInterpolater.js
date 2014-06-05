@@ -18,7 +18,7 @@ class TransformInterpolater extends MonoBehaviour
 	// Raise the sendrate if you want to lower the interpolationBackTime.
 	//
 	
-    public var interpolationBackTime : double = 0.05;
+    public var interpolationBackTime : double = 0.15;
 
     // We store twenty states with "playback" information
     var m_BufferedState : State[] = new State[20];

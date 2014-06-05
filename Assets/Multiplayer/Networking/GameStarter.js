@@ -2,10 +2,12 @@
 
 public var HoverPlate : GameObject;
 public var Chasis : GameObject;
+public var Cannon : GameObject;
 
 var isServer : boolean = false;
 var ip : String = "192.168.1.110";
 var message = "";
+var savefile = "MyDesign";
 
 function Start() {
 	Network.sendRate = 25;
@@ -33,6 +35,14 @@ function OnGUI() {
 	if(GUI.Button(Rect(0,75,100,25),"Initialize Plate") && Network.isClient) {
 		networkView.RPC("AddPlayerToGame",RPCMode.Server);
 	}
+	
+	savefile = GUI.TextField(Rect(0,135,100,25),savefile);
+	
+	if(GUI.Button(Rect(0,165,100,25),"Load Machine Design") && Network.isClient) {
+		var machineDesignNetworkManager : MachineDesignNetworkManager = GetComponent("MachineDesignNetworkManager");
+		machineDesignNetworkManager.SendMachineDesignToServer(savefile);
+	//	machineDesignNetworkManager.PrintRemote();
+	}
 }
 
 @RPC
@@ -40,13 +50,14 @@ function AddPlayerToGame(messageInfo : NetworkMessageInfo) {
 	// initialize start plate,chasis and call RPC set ups on all machines
 	var plate : GameObject = Network.Instantiate(HoverPlate,Vector3(0,5,0),Quaternion.identity,0);
 	var chasis : GameObject = Network.Instantiate(Chasis,plate.transform.TransformPoint(Vector3(0,3.5,0)),Quaternion.identity,0);
-	networkView.RPC("SetUpPlate",RPCMode.All,plate.networkView.viewID,chasis.networkView.viewID,messageInfo.sender);
+	var cannon : GameObject = Network.Instantiate(Cannon,chasis.transform.TransformPoint(Vector3(0,1,0)),Quaternion.identity,0);
+	networkView.RPC("SetUpPlate",RPCMode.All,plate.networkView.viewID,chasis.networkView.viewID,cannon.networkView.viewID,messageInfo.sender);	
 	networkView.RPC("StartGamePhysics",RPCMode.Server);
 }
 
 // given a viewID of a plate, sets up the plate for all players
 @RPC
-function SetUpPlate(plateViewID : NetworkViewID, chasisViewID : NetworkViewID, player : NetworkPlayer) {
+function SetUpPlate(plateViewID : NetworkViewID, chasisViewID : NetworkViewID, bombViewID : NetworkViewID, player : NetworkPlayer) {
 	var nView : NetworkView = NetworkView.Find(plateViewID);
 	
 	var plate : GameObject = nView.gameObject;
@@ -61,17 +72,26 @@ function SetUpPlate(plateViewID : NetworkViewID, chasisViewID : NetworkViewID, p
 	otherAttachedPieces.clearAttachments();
 	otherAttachedPieces.connectedObjects[0] = plate.gameObject; 
 	
+	var cannon : GameObject = NetworkView.Find(bombViewID).gameObject;
+	var connector : Connector = cannon.GetComponent(Connector);
+	connector.Connect(chasis,Vector3(4.5,5,0),Quaternion.identity);
+	var kban : KeyBindedActivatorNetworked = cannon.AddComponent(KeyBindedActivatorNetworked);
+	kban.key = "l";
+	
 	// if not server, disable all physics simulation components
 	if(!Network.isServer) {
 		PurgeClientSideComponents(plate);
 		PurgeClientSideComponents(chasis);
+		PurgeClientSideComponents(cannon);
 	}
 	
 	var controller : HoverControllerNetwork = plate.AddComponent(HoverControllerNetwork);
 	
 	// if we control this hoverplate, mark that
-	if(Network.player == player)
+	if(Network.player == player) {
 		controller.controlledByMe = true;
+		kban.controlledByMe = true;
+	}
 }
 
 @RPC

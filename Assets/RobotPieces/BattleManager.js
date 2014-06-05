@@ -15,13 +15,16 @@ public var overheatRate : int;					// amount the heat increases when fired
 public var cooldownRate : int;					// the amount of heat the weapon loses per second. Keep in mind, overheat rate must be greater than this.
 public var maximumFireHeat : int;				// when heat reaches this value, the weapon is no longer fireable
 public var cooledHeat : int;					// if the weapon is overheated and reaches this heat value, it is no longer overheated and can be fired again.
-private var heat : float = 0;							// how hot the weapon currently is
-private var overHeated : boolean = false;				// if the weapon is currently overheated
+public var heat : float = 0;							// how hot the weapon currently is
+public var overHeated : boolean = false;				// if the weapon is currently overheated
 
 public var contactEffect : GameObject = null;
 
+public var BAM : BattleAppearanceManagerNetworked;
+
 function Start () {
 	currentHealth = pieceMaxHealth;
+	BAM = GetComponent(BattleAppearanceManagerNetworked);
 }
 
 function CauseDamage (collidedObj : BattleManager)
@@ -89,6 +92,8 @@ function IsOverHeated()
 
 function AddHeat() {
 	heat += overheatRate;
+	if(Network.isServer)
+		BAM.AddHeatServer();
 }
 
 function Update() {

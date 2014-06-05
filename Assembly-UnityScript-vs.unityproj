@@ -81,13 +81,17 @@
      <Compile Include="Assets\MachinePieces\WheelPieceConnector.js" />
      <Compile Include="Assets\MainMenu\MainMenuGUI.js" />
      <Compile Include="Assets\Multiplayer\MultiplayerGUI.js" />
+     <Compile Include="Assets\Multiplayer\Networking\BattleAppearanceManagerNetworked.js" />
      <Compile Include="Assets\Multiplayer\Networking\GameStarter.js" />
      <Compile Include="Assets\Multiplayer\Networking\HostManager.js" />
      <Compile Include="Assets\Multiplayer\Networking\HoverControllerClient.js" />
      <Compile Include="Assets\Multiplayer\Networking\HoverControllerNetwork.js" />
      <Compile Include="Assets\Multiplayer\Networking\HoverControllerServer.js" />
      <Compile Include="Assets\Multiplayer\Networking\HoverPlateControllerNetworked.js" />
+     <Compile Include="Assets\Multiplayer\Networking\KeyBindedActivatorNetworked.js" />
+     <Compile Include="Assets\Multiplayer\Networking\MachineDesignNetworkManager.js" />
      <Compile Include="Assets\Multiplayer\Networking\Matchmaker.js" />
+     <Compile Include="Assets\Multiplayer\Networking\ProjectileEffectNetworked.js" />
      <Compile Include="Assets\Multiplayer\Networking\SimulatedServerTest.js" />
      <Compile Include="Assets\Multiplayer\Networking\TransformInterpolater.js" />
      <Compile Include="Assets\PlaneColor.js" />

@@ -1,8 +1,8 @@
 ﻿#pragma strict
 
-public var explosionDelay : float;
+// BombProjectileManager class. Handles projectile movement and interaction with other pieces
+
 public var relatedBM : BattleManager;
-public var explosionEffect : GameObject;
 
 function ActivateCollisions()
 {	
@@ -14,26 +14,34 @@ function ActivateCollisions()
 function Start () {
 	//collider.enabled = false;
 	
-	Physics.IgnoreCollision(collider,relatedBM.collider);
-	var machPieces: MachinePieceAttachments = relatedBM.GetComponent("MachinePieceAttachments");
+	if(Network.isServer) {
+		Physics.IgnoreCollision(collider,relatedBM.collider);
+		var machPieces: MachinePieceAttachments = relatedBM.GetComponent("MachinePieceAttachments");
 	
-	for(var currObj : GameObject in machPieces.connectedObjects) {
-		if(currObj != null && currObj.collider != null) {
-			Debug.Log("Ignoring " + currObj.collider);
+		for(var currObj : GameObject in machPieces.connectedObjects) {
+			if(currObj != null && currObj.collider != null) {
+				Debug.Log("Ignoring " + currObj.collider);
 		
-			var machPieces2 : MachinePieceAttachments = currObj.GetComponent("MachinePieceAttachments");
-			for(var currObj2 : GameObject in machPieces2.connectedObjects)
-				if(currObj2 != null)
-					Physics.IgnoreCollision(collider,currObj2.collider);
-			Physics.IgnoreCollision(collider,currObj.collider);
+				var machPieces2 : MachinePieceAttachments = currObj.GetComponent("MachinePieceAttachments");
+				for(var currObj2 : GameObject in machPieces2.connectedObjects)
+					if(currObj2 != null)
+						Physics.IgnoreCollision(collider,currObj2.collider);
+				Physics.IgnoreCollision(collider,currObj.collider);
+			}
 		}
-	}
 				
 	//Invoke("ActivateCollisions",.4);
 	//Invoke("Explode",explosionDelay);
 	
-	rigidbody.AddRelativeForce(Vector3(0,350,0));
-	rigidbody.velocity = relatedBM.rigidbody.velocity;
+		rigidbody.AddRelativeForce(Vector3(0,350,0));
+		rigidbody.velocity = relatedBM.rigidbody.velocity;
+	}
+	else {
+		// purge components, including this
+		gameObject.Destroy(rigidbody);
+		gameObject.Destroy(collider);
+		gameObject.Destroy(this);
+	}
 }
 
 function OnCollisionEnter(col : Collision) {
@@ -56,7 +64,13 @@ function Explode()
 			}
 	}
 	
-	GameObject.Destroy(GameObject.Instantiate(explosionEffect,transform.position,Quaternion.identity),1.5);
+
+//	GameObject.Destroy(GameObject.Instantiate(explosionEffect,transform.position,Quaternion.identity),1.5);
 	
-	GameObject.Destroy(gameObject);
+//	GameObject.Destroy(gameObject);
+
+	// generate effect on players, then destroy self
+	var effect : ProjectileEffectNetworked = GetComponent(ProjectileEffectNetworked);
+	effect.ExplodeRemote();
+	Network.Destroy(networkView.viewID);
 }

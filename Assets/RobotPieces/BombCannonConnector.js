@@ -92,6 +92,17 @@ public class BombCannonConnector extends Connector
 		}
 	}
 	
+	function ActivateNetworked() {
+		if(loaded && !battleManager.IsOverHeated()) {
+			loaded = false;
+			var tempObj = Network.Instantiate(projectileType,transform.position,transform.rotation,0);
+			var tempObjM : BombProjectileManager = tempObj.GetComponent("BombProjectileManager");
+			tempObjM.relatedBM = GetComponent("BattleManager");
+			StartCoroutine("Reload");
+			battleManager.AddHeat();
+		}
+	}
+	
 	function Reload()
 	{
 		yield WaitForSeconds(.8);
