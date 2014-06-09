@@ -1,6 +1,7 @@
 #pragma strict
 
-// Piece Dictionary Class. Implemented as an Array. Stores 
+// Piece Dictionary Class. Implemented as an Array. Stores values used for saving machine designs.
+
 class PieceDictionary{
 	static var pieceIndexTable = new Hashtable();
 	
@@ -21,7 +22,17 @@ class PieceDictionary{
 			pieceIndexTable.Add(6,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/MultiRocketLauncher.prefab",GameObject));
 			pieceIndexTable.Add(7,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Puncher.prefab",GameObject));
 			pieceIndexTable.Add(8,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/BombCannon.prefab",GameObject)); */
+			pieceIndexTable.Add(0,Resources.Load("ChasisA.prefab",GameObject));
+			pieceIndexTable.Add(1,Resources.Load("HoverPlate.prefab",GameObject));
+			pieceIndexTable.Add(2,Resources.Load("MachineGun.prefab",GameObject));
+			pieceIndexTable.Add(3,Resources.Load("RocketLauncher.prefab",GameObject));
+			pieceIndexTable.Add(4,Resources.Load("Sawblade.prefab",GameObject));
+			pieceIndexTable.Add(5,Resources.Load("Thruster.prefab",GameObject));
+			pieceIndexTable.Add(6,Resources.Load("MultiRocketLauncher.prefab",GameObject));
+			pieceIndexTable.Add(7,Resources.Load("Puncher.prefab",GameObject));
+			pieceIndexTable.Add(8,Resources.Load("BombCannon.prefab",GameObject));
 			pieceIndexTable.Add(100,"KeyBindedActivator");
+			pieceIndexTable.Add(101,"KeyBindedActivatorNetworked");
 			
 			initialized = true;
 		}

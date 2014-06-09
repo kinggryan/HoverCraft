@@ -4,13 +4,15 @@ public var HoverPlate : GameObject;
 public var Chasis : GameObject;
 public var Cannon : GameObject;
 
+public var PlayerNumberHashtable : Hashtable;	//	tracks which player to associate with which player number.
+
 var isServer : boolean = false;
 var ip : String = "192.168.1.110";
 var message = "";
 var savefile = "MyDesign";
 
 function Start() {
-	Network.sendRate = 25;
+	Network.sendRate = 25;		
 }
 
 function OnGUI() {
@@ -101,6 +103,10 @@ function StartGamePhysics() {
 
 function OnServerInitialized(player : NetworkPlayer) {
 	Debug.Log("Success! IP : " + player.ipAddress + " and port : " + player.port);
+	
+	// Initialize Player Number Hashtable and PieceDictionary for Loading Pieces
+	PlayerNumberHashtable = new Hashtable();
+	PieceDictionary.InitializeDictionary();
 }
 
 function OnConnectedToServer() {
@@ -114,7 +120,8 @@ function OnFailedToConnect(error : NetworkConnectionError) {
 }
 
 function OnPlayerConnected(player : NetworkPlayer) {
-	Debug.Log("player connected; ip : " +player.ipAddress);
+	Debug.Log("player connected; ip : " +player.ipAddress +"; player number : "+PlayerNumberHashtable.Count);
+	PlayerNumberHashtable.Add(PlayerNumberHashtable.Count,player);
 }
 
 @RPC

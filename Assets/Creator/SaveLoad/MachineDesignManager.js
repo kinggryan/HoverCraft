@@ -87,7 +87,7 @@ static function BuildTreeRecursive(piece : GameObject, node : PieceTreeNode)
 				
 //	Debug.Log("Pretest: " + AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject));
 //	Debug.Log("Test : " +PieceDictionary.GetIndexFromPieceType(AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject)));
-//	node.SetData(PieceDictionary.GetIndexFromPieceType(AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject)),piece.transform.position,piece.transform.rotation,PieceDictionary.GetIndexFromPieceType(activatorString),activatorKey);
+	node.SetData(PieceDictionary.GetIndexFromPieceType(Resources.Load(RemoveClone(piece.ToString())+".prefab",GameObject)),piece.transform.position,piece.transform.rotation,PieceDictionary.GetIndexFromPieceType(activatorString),activatorKey);
 	
 	// add children nodes
 	var machinePieces : MachinePieceAttachments = piece.GetComponent(MachinePieceAttachments);

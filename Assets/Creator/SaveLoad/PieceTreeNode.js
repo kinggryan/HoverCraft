@@ -155,12 +155,22 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 		Debug.Log("Constructing " + pieceDataType);
 		
 		if(parent == null) {
-			newObj = GameObject.Instantiate(pieceDataType,position+offset, rotation);
+			// if we're on a network and the server, instantiate through the network
+			if(Network.isServer)
+				newObj = Network.Instantiate(pieceDataType,position+offset, rotation, 0);
+			else if (!Network.isClient)
+				newObj = GameObject.Instantiate(pieceDataType,position+offset, rotation);
 		}
 		else {
-			newObj = GameObject.Instantiate(pieceDataType,position+offset,rotation);
-			var connector : Connector = newObj.GetComponent("Connector");
-			connector.Connect(parent,position+offset,rotation);
+			if(Network.isServer) {
+				newObj = Network.Instantiate(pieceDataType,position+offset,rotation,0);
+				newObj.networkView.RPC("Connect",RPCMode.All,parent.networkView.viewID,position+offset,rotation);
+			}
+			else if (!Network.isClient) {
+				newObj = GameObject.Instantiate(pieceDataType,position+offset,rotation);
+				var connector : Connector = newObj.GetComponent("Connector");
+				connector.Connect(parent,position+offset,rotation);
+			}
 		} // else we have a parent, so construct and connect
 		
 		if(activatorType != null) { // if there's some activator

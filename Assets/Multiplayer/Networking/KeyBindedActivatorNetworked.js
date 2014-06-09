@@ -3,10 +3,7 @@
 // Key Binded Activator Networked class. 
 //  Attaches to a piece and sends player input data to the server.
 
-class KeyBindedActivatorNetworked extends MonoBehaviour {
-	public var key : String;
-	public var attachedPiece : Connector;
-	public var relatedCamera : GameObject;
+class KeyBindedActivatorNetworked extends Activator {
 	public var controlledByMe : boolean = false;
 	
 	private var keyPressed : boolean = false;
@@ -40,6 +37,14 @@ class KeyBindedActivatorNetworked extends MonoBehaviour {
 	function CallDeActivate() {
 		attachedPiece.DeActivateNetworked();
 		keyPressed = false;
+	}
+	
+	@RPC
+	function SetController(player : NetworkPlayer) {
+		if(Network.player == player) {
+			controlledByMe = true;
+			relatedCamera = GameObject.Find("Main Camera");
+		}
 	}
 	
 	function FixedUpdate() {
