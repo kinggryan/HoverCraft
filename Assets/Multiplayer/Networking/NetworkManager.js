@@ -5,6 +5,7 @@ static class NetworkManager extends Photon.MonoBehaviour {
 	static public var inServerMode = false;
 	static public var savedLobbyName;
 	static public var portNumber = 25000;
+	static public var PlayerNumberHashtable : Hashtable;	//	tracks which player to associate with which player number.
 
 	// Called ONLY when setting up the server instance of the game
 	static function SetUpServerLobby(lobbyName : String) {
@@ -39,5 +40,15 @@ static class NetworkManager extends Photon.MonoBehaviour {
 	
 	function OnJoinedLobby(){
 		Debug.LogError("Joined Lobby");
+	}
+	
+	function OnPlayerConnected(player : NetworkPlayer) {
+		Debug.Log("player connected; ip : " +player.ipAddress +"; player number : "+PlayerNumberHashtable.Count);
+		PlayerNumberHashtable.Add(PlayerNumberHashtable.Count,player);
+	}
+	
+	function OnPlayerDisconnected(player : NetworkPlayer) {
+		Debug.Log("player disconnected; ip : " +player.ipAddress +"; player number : "+PlayerNumberHashtable.Count);
+		PlayerNumberHashtable.Remove(player);
 	}
 }

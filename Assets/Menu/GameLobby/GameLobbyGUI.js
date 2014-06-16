@@ -3,6 +3,9 @@
 import Photon;
 
 class GameLobbyGUI extends Photon.MonoBehaviour {
+	var machineName : String = "MyDesign";
+	var ready = false;
+	var playersReadyList : Hashtable;
 
 	function Start() {	
 		// if we're the host, try to join our server's room until we do. If we're server, we've already connected
@@ -14,23 +17,19 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 			var pView : PhotonView = PhotonView.Get(this);
 			Debug.LogError("pView butt : " +pView +"; id : " +pView.viewID);
 			//pView.RPC("TestRPC", PhotonNetwork.player);
-			
+						
+			// start server
+			var useNat = !Network.HavePublicAddress();
+			Debug.Log("Init server... " + Network.InitializeServer(32, 25000, useNat));
 			var ip : ServerIPTransfer = GetComponent(ServerIPTransfer);
 			ip.IP = Network.player.ipAddress;
 			ip.port = NetworkManager.portNumber;
+			playersReadyList = new Hashtable();
 			
 			if(PhotonNetwork.connected)
 				Debug.LogError("connected");
 			else
 				Debug.LogError("not connected...");
-			
-			// start server
-	//		var useNat = !Network.HavePublicAddress();
-	//		Debug.LogError("Init server... " + Network.InitializeServer(32, 25000, useNat));
-			
-
-		//	pView.RPC("AllocatePhotonViewID",PhotonTargets.All,viewID);
-		//	pView.RPC("ConnectToServerViaUnity",PhotonTargets.AllBufferedViaServer,Network.player.ipAddress,NetworkManager.portNumber);
 		}
 		else {
 			PhotonNetwork.autoJoinLobby = false;
@@ -89,6 +88,33 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 			GUI.Label(Rect(200,50,50,50),"Player Count : " + PhotonNetwork.room.playerCount);
 		else
 			GUI.Label(Rect(200,50,50,50),"Not in room");
+		
+		if(NetworkManager.isHost && Network.isClient)
+			if(GUI.Button(Rect(15,125,100,100),"Start Game")) {
+				var nView : NetworkView = GetComponent("NetworkView");
+				// send RPC to start level to server, which checks that all machine designs are loaded. if they are, it starts the level.
+				//		otherwise, it doesn't.
+				nView.RPC("TryToStartLevelOnServer",RPCMode.Server,LevelDictionary.TEST_LEVEL);
+			}
+			
+		// machine name string
+		machineName = GUI.TextField(Rect(15,235,100,25),machineName);
+		// if we click ready, then check it true if and only if the machine design exists. Also, tell server to load machine design.
+		if(GUI.Button(Rect(125,235,50,25),"Ready?")) {
+			var mdnm : MachineDesignNetworkManager = GetComponent(MachineDesignNetworkManager);
+			if(mdnm.LocalMachineDesignExists(machineName)) {
+				mdnm.SendMachineDesignToServer(machineName);
+			}
+		}
+	}
+	
+	function ReadyPlayer(player : NetworkPlayer) {
+		playersReadyList[player] = true;
+	}
+	
+	@RPC
+	function PlayerReady(player : NetworkPlayer) {
+		playersReadyList[player] = true;
 	}
 	
 	@RPC
@@ -105,7 +131,6 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 		Debug.Log("Server Killed");
 	}
 	
-	@RPC
 	function ConnectToServerViaUnity(ip : String,port : int) {
 		Debug.Log("Attempting to connect to unity server");
 		Network.Connect(ip,25000);
@@ -125,5 +150,36 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 	@RPC
 	function TestRPC() {
 		Debug.LogError("test");
+	}
+	
+	@RPC
+	function OnServerInitialized() {
+		var ip : ServerIPTransfer = GetComponent(ServerIPTransfer);
+		ip.connectViaUnityNetwork = true;
+	}
+	
+	@RPC
+	function StartLevel(levelIndex : int) {
+		Application.LoadLevel(levelIndex);
+	}
+	
+	@RPC
+	function TryToStartLevelOnServer(levelIndex : int) {
+		var allPlayersReady = true;
+		for (playerReady in playersReadyList) {
+			if(!playerReady)
+				allPlayersReady = false;
+		}
+		
+		if(allPlayersReady) {
+			var nView : NetworkView = GetComponent("NetworkView");
+			nView.RPC("StartLevel",RPCMode.All,levelIndex);
+		}	
+	}
+	
+	@RPC
+	function OnPlayerConnected(player : NetworkPlayer) {
+		if(NetworkManager.inServerMode)
+			playersReadyList.Add(player,false);
 	}
 }

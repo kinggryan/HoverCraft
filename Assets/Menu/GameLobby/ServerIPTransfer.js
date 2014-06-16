@@ -5,7 +5,7 @@
 class ServerIPTransfer extends Photon.MonoBehaviour {
 	var IP : String;
 	var port : int;
-	var connectViaUnityNetwork : bool = false;		// since RPCs are mysteriously not working, we will mark this as true to trigger the unity
+	var connectViaUnityNetwork : boolean = false;		// since RPCs are mysteriously not working, we will mark this as true to trigger the unity
 											// 	connection on clients
 
 	function OnPhotonSerializeView(stream : PhotonStream, info : PhotonMessageInfo ) {
@@ -22,6 +22,12 @@ class ServerIPTransfer extends Photon.MonoBehaviour {
             IP = stream.ReceiveNext();
             port = stream.ReceiveNext();
             connectViaUnityNetwork = stream.ReceiveNext();
+            
+            if(connectViaUnityNetwork) {
+            	var glGUI : GameLobbyGUI = GetComponent(GameLobbyGUI);
+            	gameObject.Destroy(this);
+            	glGUI.ConnectToServerViaUnity(IP,port);
+            }
         }
 	}
 }

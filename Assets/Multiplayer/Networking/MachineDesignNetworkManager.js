@@ -2,7 +2,15 @@
 
 // Machine Design Network Manager class. Must be attached to an object with a network view so we can send the RPC via network views
 
-public var playerMachineDesigns : Hashtable;
+static public var playerMachineDesigns : Hashtable;
+
+// Returns true if machine design file exists on the local machine, false if otherwise.
+function LocalMachineDesignExists(filePath : String) {
+	if(File.Exists("MachineDesigns/"+filePath))
+		return true;
+	else
+		return false;
+}
 
 function SendMachineDesignToServer(filePath : String) {
 	// TODO make machine design folder at location relative to application directory - we may already do this
@@ -15,6 +23,12 @@ function LoadMachineDesignOnServer(data : byte[], info : NetworkMessageInfo) {
 	Debug.Log("Data length as string: " + data.Length);
 	var rootNode = SaveLoad.LoadMachineDesignFromBytes(data);
 	playerMachineDesigns.Add(info.sender,rootNode);
+	
+	// mark player as ready
+	var gui : GameLobbyGUI = GetComponent(GameLobbyGUI);
+	if(gui != null) {
+		gui.ReadyPlayer(info.sender);
+	}
 }
 
 function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : Vector3[]) {
