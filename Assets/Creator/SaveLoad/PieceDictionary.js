@@ -22,19 +22,22 @@ class PieceDictionary{
 			pieceIndexTable.Add(6,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/MultiRocketLauncher.prefab",GameObject));
 			pieceIndexTable.Add(7,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/Puncher.prefab",GameObject));
 			pieceIndexTable.Add(8,AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/BombCannon.prefab",GameObject)); */
-			pieceIndexTable.Add(0,Resources.Load("ChasisA.prefab",GameObject));
-			pieceIndexTable.Add(1,Resources.Load("HoverPlate.prefab",GameObject));
-			pieceIndexTable.Add(2,Resources.Load("MachineGun.prefab",GameObject));
-			pieceIndexTable.Add(3,Resources.Load("RocketLauncher.prefab",GameObject));
-			pieceIndexTable.Add(4,Resources.Load("Sawblade.prefab",GameObject));
-			pieceIndexTable.Add(5,Resources.Load("Thruster.prefab",GameObject));
-			pieceIndexTable.Add(6,Resources.Load("MultiRocketLauncher.prefab",GameObject));
-			pieceIndexTable.Add(7,Resources.Load("Puncher.prefab",GameObject));
-			pieceIndexTable.Add(8,Resources.Load("BombCannon.prefab",GameObject));
+			pieceIndexTable.Add(0,Resources.Load("ChasisA",GameObject));
+			pieceIndexTable.Add(1,Resources.Load("HoverPlate",GameObject));
+			pieceIndexTable.Add(2,Resources.Load("MachineGun",GameObject));
+			pieceIndexTable.Add(3,Resources.Load("RocketLauncher",GameObject));
+			pieceIndexTable.Add(4,Resources.Load("Sawblade",GameObject));
+			pieceIndexTable.Add(5,Resources.Load("Thruster",GameObject));
+			pieceIndexTable.Add(6,Resources.Load("MultiRocketLauncher",GameObject));
+			pieceIndexTable.Add(7,Resources.Load("Puncher",GameObject));
+			pieceIndexTable.Add(8,Resources.Load("BombCannon",GameObject));
 			pieceIndexTable.Add(100,"KeyBindedActivator");
 			pieceIndexTable.Add(101,"KeyBindedActivatorNetworked");
 			
 			initialized = true;
+			
+			for(var currEntry : DictionaryEntry in pieceIndexTable)
+				Debug.Log("Index : "+currEntry.Key + "; value: "+currEntry.Value);
 		}
 		else
 			Debug.Log("Table Already Initialized");
@@ -68,11 +71,16 @@ class PieceDictionary{
 			return null;
 		}
 	
+		if(!initialized)
+			InitializeDictionary();
+		
 		if(initialized) {
+			for(var currEntry : DictionaryEntry in pieceIndexTable)
+				Debug.LogError("Index : "+currEntry.Key + "; value: "+currEntry.Value);
 			return pieceIndexTable[index];
 		}
 		else {
-			Debug.Log("Attempting to Search Uninitialized");
+			Debug.LogError("Attempting to Search Uninitialized");
 			return null;
 		}
 	}

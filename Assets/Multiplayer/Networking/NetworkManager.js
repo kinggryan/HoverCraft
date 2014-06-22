@@ -14,6 +14,7 @@ static class NetworkManager extends Photon.MonoBehaviour {
 		inServerMode = true;
 		savedLobbyName = lobbyName;
 		PhotonNetwork.ConnectUsingSettings("1");
+		PieceDictionary.InitializeDictionary();
 	}
 	
 	static function LaunchLocalServer(lobbyName : String) {
@@ -40,15 +41,5 @@ static class NetworkManager extends Photon.MonoBehaviour {
 	
 	function OnJoinedLobby(){
 		Debug.LogError("Joined Lobby");
-	}
-	
-	function OnPlayerConnected(player : NetworkPlayer) {
-		Debug.Log("player connected; ip : " +player.ipAddress +"; player number : "+PlayerNumberHashtable.Count);
-		PlayerNumberHashtable.Add(PlayerNumberHashtable.Count,player);
-	}
-	
-	function OnPlayerDisconnected(player : NetworkPlayer) {
-		Debug.Log("player disconnected; ip : " +player.ipAddress +"; player number : "+PlayerNumberHashtable.Count);
-		PlayerNumberHashtable.Remove(player);
 	}
 }

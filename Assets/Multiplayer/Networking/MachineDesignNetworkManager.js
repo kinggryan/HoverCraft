@@ -4,6 +4,11 @@
 
 static public var playerMachineDesigns : Hashtable;
 
+function Start() {
+	if(NetworkManager.inServerMode)
+		playerMachineDesigns = new Hashtable();
+}
+
 // Returns true if machine design file exists on the local machine, false if otherwise.
 function LocalMachineDesignExists(filePath : String) {
 	if(File.Exists("MachineDesigns/"+filePath))
@@ -16,6 +21,7 @@ function SendMachineDesignToServer(filePath : String) {
 	// TODO make machine design folder at location relative to application directory - we may already do this
 	var fileData = SaveLoad.MachineDesignToBytes("MachineDesigns/"+filePath);
 	networkView.RPC("LoadMachineDesignOnServer",RPCMode.Server,fileData);
+	Debug.Log("Sent Design");
 }
 
 @RPC
@@ -28,7 +34,13 @@ function LoadMachineDesignOnServer(data : byte[], info : NetworkMessageInfo) {
 	var gui : GameLobbyGUI = GetComponent(GameLobbyGUI);
 	if(gui != null) {
 		gui.ReadyPlayer(info.sender);
+		networkView.RPC("PrintMessageOnDebugErrorLog",RPCMode.All,"ready");
 	}
+}
+
+@RPC
+function PrintMessageOnDebugErrorLog(message : String) {
+	Debug.LogError(message);
 }
 
 function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : Vector3[]) {

@@ -43,7 +43,7 @@ function Connect(blockObject : GameObject, relativePosition : Vector3, rotation 
 
 // This connect function is what's called during loading via Network.
 @RPC
-function Connect(objectView : NetworkViewID, relativePosition : Vector3, rotation : Quaternion){
+function ConnectNetwork(objectView : NetworkViewID, relativePosition : Vector3, rotation : Quaternion){
 	//	var worldSpaceSide : Vector3 = blockObject.transform.TransformPoint(relativePosition);
 		var blockObject : GameObject = NetworkView.Find(objectView).gameObject;
 		

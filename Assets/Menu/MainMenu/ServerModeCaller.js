@@ -12,7 +12,7 @@ function Awake() {
 		if (String.Compare(args[2],"-servermode") == 0) {
 			Debug.LogError("NEW server mode initialized");
 			Debug.LogError("setting up server...");
-			Screen.SetResolution(3,2,false);
+			Screen.SetResolution(800,600,false);
 			NetworkManager.inServerMode = true;
 			NetworkManager.savedLobbyName = args[3];
 			PhotonNetwork.ConnectUsingSettings("1");

@@ -10,15 +10,17 @@ function Start() {
 
 function OnGUI () {
 	// New Design Button
-	if(GUI.Button(Rect(25,25,100,100),"New Design"))
-		Application.LoadLevel(LevelDictionary.TEST_LEVEL);
-		
+	if(GUI.Button(Rect(25,25,100,100),"New Design")) {
+		MachineDesignManager.loadFlag = false;
+		Application.LoadLevel(LevelDictionary.BUILD_ROOM);
+	}	
+	
 	// load file button
 	loadFileName = GUI.TextField(Rect(25,135,100,20),loadFileName,25);
 	if(GUI.Button(Rect(25,155,100,100),"Load Design")) {
 		MachineDesignManager.loadFlag = true;
 		MachineDesignManager.loadFileName = loadFileName;
-		Application.LoadLevel(LevelDictionary.TEST_LEVEL);
+		Application.LoadLevel(LevelDictionary.BUILD_ROOM);
 	}
 	
 	if(GUI.Button(Rect(150,25,100,100),"Back"))

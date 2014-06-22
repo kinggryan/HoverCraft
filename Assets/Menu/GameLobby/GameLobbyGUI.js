@@ -25,6 +25,8 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 			ip.IP = Network.player.ipAddress;
 			ip.port = NetworkManager.portNumber;
 			playersReadyList = new Hashtable();
+		 	NetworkManager.PlayerNumberHashtable = new Hashtable();
+			Debug.LogError("Hashtable Generated");
 			
 			if(PhotonNetwork.connected)
 				Debug.LogError("connected");
@@ -100,21 +102,32 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 		// machine name string
 		machineName = GUI.TextField(Rect(15,235,100,25),machineName);
 		// if we click ready, then check it true if and only if the machine design exists. Also, tell server to load machine design.
-		if(GUI.Button(Rect(125,235,50,25),"Ready?")) {
+		if(!ready && GUI.Button(Rect(125,235,65,25),"Ready?")) {
 			var mdnm : MachineDesignNetworkManager = GetComponent(MachineDesignNetworkManager);
 			if(mdnm.LocalMachineDesignExists(machineName)) {
 				mdnm.SendMachineDesignToServer(machineName);
+				ready = true;
+				Debug.Log("Loaded and sent");
 			}
+			else
+				Debug.LogError("Design Not Found");
 		}
 	}
 	
 	function ReadyPlayer(player : NetworkPlayer) {
 		playersReadyList[player] = true;
+		var nView : NetworkView = GetComponent(NetworkView);
+		nView.RPC("PrintMessage",RPCMode.All,"Player ready.");
 	}
 	
 	@RPC
 	function PlayerReady(player : NetworkPlayer) {
 		playersReadyList[player] = true;
+	}
+	
+	@RPC
+	function PrintMessage(message : String) {
+		Debug.Log(message);
 	}
 	
 	@RPC
@@ -163,23 +176,36 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 		Application.LoadLevel(levelIndex);
 	}
 	
+	// Called on Server to check if all players are ready
 	@RPC
 	function TryToStartLevelOnServer(levelIndex : int) {
 		var allPlayersReady = true;
-		for (playerReady in playersReadyList) {
-			if(!playerReady)
+		for (playerReady in playersReadyList.Values) {
+			if(playerReady == false)
 				allPlayersReady = false;
 		}
 		
 		if(allPlayersReady) {
 			var nView : NetworkView = GetComponent("NetworkView");
+			nView.RPC("PrintMessage",RPCMode.All,"Starting...");
 			nView.RPC("StartLevel",RPCMode.All,levelIndex);
 		}	
 	}
 	
-	@RPC
 	function OnPlayerConnected(player : NetworkPlayer) {
-		if(NetworkManager.inServerMode)
-			playersReadyList.Add(player,false);
+		if(NetworkManager.inServerMode) {
+		 	if(player != Network.player)
+				playersReadyList.Add(player,false);
+				
+			Debug.LogError("player connected; ip : " +player.ipAddress +"; player number : "+NetworkManager.PlayerNumberHashtable.Count);
+			NetworkManager.PlayerNumberHashtable.Add(NetworkManager.PlayerNumberHashtable.Count,player);
+		}
+	}
+	
+	function OnPlayerDisconnected(player : NetworkPlayer) {
+		if(NetworkManager.inServerMode) {
+			Debug.Log("player disconnected; ip : " +player.ipAddress +"; player number : "+NetworkManager.PlayerNumberHashtable.Count);
+			NetworkManager.PlayerNumberHashtable.Remove(player);
+		}
 	}
 }
