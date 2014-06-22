@@ -15,15 +15,11 @@ public class MachineGunConnector extends Connector
 		transform.position = worldSpaceSide;
 		transform.rotation = Quaternion.LookRotation(worldSpaceDir,Vector3(worldSpaceDir.y,worldSpaceDir.z,worldSpaceDir.x));
 	//	transform.position += (transform.position - blockObject.transform.position);
-		GetComponent(FixedJoint).connectedBody = blockObject.rigidbody;
 		
 		// attach to block
 		var machinePieceInfo : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
 		for(var currObj : GameObject in machinePieceInfo.connectedObjects)
 			currObj = blockObject;
-		
-		// don't collide with attached block	
-		Physics.IgnoreCollision(collider,blockObject.collider);
 		
 		gameObject.AddComponent(KeyBindedActivator).key = "1";
 	//	gameObject.AddComponent(TargettingActivator).key = "1";
@@ -34,6 +30,9 @@ public class MachineGunConnector extends Connector
 		bulletEffectObject.transform.parent = transform;
 		bulletEffectObject.enableEmission = false;
 		bulletEffectObject.simulationSpace = ParticleSystemSimulationSpace.World;
+		
+		// be parented by attached block
+		transform.parent = blockObject.transform;
 	}
 	
 	function Start()
@@ -69,25 +68,14 @@ public class MachineGunConnector extends Connector
 		rGrabberData.rotationAxis = Vector3.up;
 		rGrabberData.grabbedObj = this; 
 		
-		GetComponent(FixedJoint).connectedBody.freezeRotation = true;
-		rigidbody.freezeRotation = true;
-		rigidbody.detectCollisions = false;
-		
 		DrawRotationArrow();
 	}
 	
 	function rotate(angleToRotate: float, axis : Vector3)
-	{
-		// store connected body, break joint, and rejoin after rotation
-		var connectedBody = GetComponent(FixedJoint).connectedBody;
-		GetComponent(FixedJoint).connectedBody = null;
-		
-		// rotate around the hinge joint
+	{	
+		// rotate around the anchor point, currently set as object center
 		var anchorPoint : Vector3 = Vector3.zero;
 		transform.RotateAround(transform.TransformPoint(anchorPoint),axis,-angleToRotate);
-		rigidbody.angularVelocity = Vector3.zero;
-		
-		GetComponent(FixedJoint).connectedBody = connectedBody;
 		
 		DrawRotationArrow();
 	}

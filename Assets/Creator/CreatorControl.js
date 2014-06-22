@@ -45,8 +45,8 @@ function AddPieceToBlock(block : GameObject, side : Vector3, direction : Vector3
 		connector.Connect(block, side, direction);
 		
 		// as we're in build mode, make the object non-interactive with the other pieces.
-		newObj.rigidbody.freezeRotation = true;
-		newObj.rigidbody.detectCollisions = false;
+	//	newObj.rigidbody.freezeRotation = true;
+	//	newObj.rigidbody.detectCollisions = false;
 	
 		machinePieceInfo.connectedObjects[index] = newObj;
 		

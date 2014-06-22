@@ -9,24 +9,24 @@ public class SawBladeConnector extends Connector
 		
 		transform.rotation = Quaternion.LookRotation(worldSpaceDir,Vector3(worldSpaceDir.y,worldSpaceDir.z,worldSpaceDir.x));
 		transform.position = worldSpaceSide;
-		GetComponent(HingeJoint).connectedBody = blockObject.rigidbody;
-		Physics.IgnoreCollision(collider,blockObject.collider);
 		
 		gameObject.AddComponent(KeyBindedActivator).key = "1";
 		
 		var machinePieceInfo : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
 		for(var currObj : GameObject in machinePieceInfo.connectedObjects)
 			currObj = blockObject;
+			
+		transform.parent = blockObject.transform;
  	}
  	
  	function AddMotion(motion : float)
  	{
- 		hingeJoint.motor.targetVelocity = motion;
+ 		//hingeJoint.motor.targetVelocity = motion;
  	}
  	
  	function EnableDisableMotor(mode : boolean)
  	{
- 		hingeJoint.useMotor = mode;
+ 		//hingeJoint.useMotor = mode;
  	}
  	
  	function DrawMotorArrow()
@@ -47,31 +47,20 @@ public class SawBladeConnector extends Connector
 		//rGrabberData.rotationAxis = transform.TransformDirection(Vector3.forward);
 		rGrabberData.rotationAxis = transform.forward;
 		rGrabberData.grabbedObj = this;
-		
-		GetComponent(HingeJoint).connectedBody.freezeRotation = true;
-		rigidbody.freezeRotation = true;
-		rigidbody.detectCollisions = false;
 	}
 	
 	function rotate(angleToRotate: float, axis : Vector3)
 	{
-		// store connected body, break joint, and rejoin after rotation
-		var connectedBody = GetComponent(HingeJoint).connectedBody;
-		GetComponent(HingeJoint).connectedBody = null;
-		
 		// rotate around the hinge joint
 		var anchorPoint : Vector3 = Vector3.zero;
 		transform.RotateAround(transform.TransformPoint(anchorPoint),axis,-angleToRotate);
 		rigidbody.angularVelocity = Vector3.zero;
-		
-		GetComponent(HingeJoint).connectedBody = connectedBody;
 	}
 	
 	function Activate()
 	{
 		var tempBM : BattleManager = GetComponent("BattleManager");
 		tempBM.EnableDisableDamage(true);
-		hingeJoint.motor.targetVelocity = 400;
 	}
 	
 	function DeActivate()
