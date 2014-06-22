@@ -37,11 +37,14 @@
 -define:ENABLE_SINGLE_INSTANCE_BUILD_SETTING
 -define:UNITY_4_3_4
 -define:UNITY_4_3
--define:DEVELOPMENT_BUILD
 -define:ENABLE_PROFILER
--r:'/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandalonePlayer/Managed/UnityEngine.dll'
+-define:UNITY_EDITOR
+-define:UNITY_EDITOR_OSX
+-r:'/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll'
 -r:'Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll'
 -r:'Assets/Plugins/Photon3Unity3D.dll'
+-r:'/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll'
+-i:UnityEditor
 'Assets/(Old)MachinePieces/Arm2Connector.js'
 'Assets/(Old)MachinePieces/ArmConnector.js'
 'Assets/(Old)MachinePieces/Arrow.js'
