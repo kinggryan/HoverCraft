@@ -8,6 +8,7 @@
 
 class HoverControllerNetwork extends MonoBehaviour {
 	public var controlledByMe : boolean = false;
+	public var controller : NetworkPlayer;
 
 	// indicate if the button is being held by the player. Kept track of by the server		
 	private var forward 	: boolean = false;

@@ -21,8 +21,8 @@ public class MachineGunConnector extends Connector
 		for(var currObj : GameObject in machinePieceInfo.connectedObjects)
 			currObj = blockObject;
 		
-		gameObject.AddComponent(KeyBindedActivator).key = "1";
-	//	gameObject.AddComponent(TargettingActivator).key = "1";
+	//	gameObject.AddComponent(KeyBindedActivator).key = "1";
+		gameObject.AddComponent(TargettingActivator).key = "1";
 		
 		// prepare to fire
 		readyToFire = true;

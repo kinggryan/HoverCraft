@@ -36,8 +36,8 @@ class PieceDictionary{
 			
 			initialized = true;
 			
-			for(var currEntry : DictionaryEntry in pieceIndexTable)
-				Debug.Log("Index : "+currEntry.Key + "; value: "+currEntry.Value);
+			/*for(var currEntry : DictionaryEntry in pieceIndexTable)
+				Debug.Log("Index : "+currEntry.Key + "; value: "+currEntry.Value); */
 		}
 		else
 			Debug.Log("Table Already Initialized");
@@ -51,7 +51,7 @@ class PieceDictionary{
 		if(initialized) {
 			for(var entry : DictionaryEntry in pieceIndexTable)
 				if(entry.Value == pieceType) {
-					Debug.Log("For value : " + entry.Value + " found key : " + entry.Key);
+			//		Debug.Log("For value : " + entry.Value + " found key : " + entry.Key);
 					return entry.Key;
 				}
 			
@@ -75,8 +75,8 @@ class PieceDictionary{
 			InitializeDictionary();
 		
 		if(initialized) {
-			for(var currEntry : DictionaryEntry in pieceIndexTable)
-				Debug.LogError("Index : "+currEntry.Key + "; value: "+currEntry.Value);
+		/*	for(var currEntry : DictionaryEntry in pieceIndexTable)
+				Debug.LogError("Index : "+currEntry.Key + "; value: "+currEntry.Value); */
 			return pieceIndexTable[index];
 		}
 		else {

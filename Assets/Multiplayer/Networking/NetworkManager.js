@@ -18,7 +18,7 @@ static class NetworkManager extends Photon.MonoBehaviour {
 	}
 	
 	static function LaunchLocalServer(lobbyName : String) {
-		Debug.Log(System.Diagnostics.Process.Start("/Users/kinggryan/MachineBuilder/MakeshiftColiseum.app/Contents/MacOS/MachineBuilder","-n -servermode "+lobbyName));
+		Debug.Log(System.Diagnostics.Process.Start("/Users/kinggryan/MachineBuilder/MakeshiftColiseum.app/Contents/MacOS/MakeshiftColiseum","-n -servermode "+lobbyName));
 	}
 	
 	function OnConnectedToMaster() {

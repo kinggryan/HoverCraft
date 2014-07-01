@@ -25,7 +25,7 @@ function Start () {
 	Screen.showCursor = false;
 	
 	// attach configurable joint in place of fixed joint
-	var attachedBody = objToFollow.mainJoint.connectedBody;
+/*	var attachedBody = objToFollow.mainJoint.connectedBody;
 	objToFollow.Destroy(objToFollow.mainJoint);
 	objToFollow.mainJoint = objToFollow.gameObject.AddComponent(ConfigurableJoint);
 	objToFollow.mainJoint.connectedBody = attachedBody;
@@ -42,7 +42,7 @@ function Start () {
 	tempJoint.highAngularXLimit.limit = 0;
 	tempJoint.angularZLimit.limit = 0;
 	tempJoint.angularYLimit.limit = 0;
-	tempJoint.anchor = Vector3.zero;
+	tempJoint.anchor = Vector3.zero; */
 }
 
 function Update () {
@@ -77,7 +77,8 @@ function Update () {
 	// get the movement amount and rotate.
 	var lookPoint = objToFollow.transform.position + 10*objToFollow.transform.up;
 	Debug.Log(lookPoint);
-	var rotatedUpwards = Vector3.RotateTowards(objToFollow.transform.up,crosshairLocationWorldSpace,.01,1);
+	//var rotatedUpwards = Vector3.RotateTowards(objToFollow.transform.up,crosshairLocationWorldSpace,.01,1);
+	objToFollow.transform.RotateAround(Vector3.zero,Vector3.Cross(objToFollow.transform.up,crosshairLocationWorldSpace),1);
 	
 	// break and reform joint
 /*	var savedBody = objToFollow.mainJoint.connectedBody;
@@ -85,14 +86,27 @@ function Update () {
 	objToFollow.transform.rotation = Quaternion.LookRotation(objToFollow.transform.forward,rotatedUpwards);
 	objToFollow.mainJoint = objToFollow.gameObject.AddComponent(FixedJoint);
 	objToFollow.mainJoint.connectedBody = savedBody; */
-	var tempJoint : ConfigurableJoint = objToFollow.mainJoint;
+//	var tempJoint : ConfigurableJoint = objToFollow.mainJoint;
 	
-	if(Input.GetKeyDown(KeyCode.RightArrow)) {
+	if(Input.GetKey(KeyCode.RightArrow)) {
 	//	tempJoint.lowAngularXLimit.limit += 1;
 	//	tempJoint.highAngularXLimit.limit += 1;
 		//tempJoint.angularZLimit.limit += 15;
 //		tempJoint.angularYLimit.limit += 15;
+	//	objToFollow.transform.RotateAround(Vector3.zero,Vector3.up,1);
 	}
+	
+	var sensitivityX = 15f;
+	var sensitivityY = 15f;
+	var minimumY = -60F;
+	var maximumY = 60F;
+
+	var rotationX = objToFollow.transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivityX;
+			
+	var rotationY = Input.GetAxis("Mouse Y") * sensitivityY;
+	rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
+			
+	objToFollow.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);	
 	
 	// store mouse pos
 	mousePosition = Input.mousePosition;

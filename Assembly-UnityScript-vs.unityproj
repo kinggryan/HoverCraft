@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_STANDALONE_OSX;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_GENERICS;ENABLE_SUBSTANCE;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_GAMECENTER;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;UNITY_4_3_4;UNITY_4_3;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_4_5_1;UNITY_4_5;UNITY_STANDALONE_OSX;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_MONO;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_GAMECENTER;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;DEVELOPMENT_BUILD;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -87,7 +87,12 @@
      <Compile Include="Assets\Menu\MainMenu\MainMenuGUI.js" />
      <Compile Include="Assets\Menu\MainMenu\ServerModeCaller.js" />
      <Compile Include="Assets\Menu\PlayMenu\PlayMenuGUI.js" />
+     <Compile Include="Assets\Multiplayer\CaptureNode.js" />
+     <Compile Include="Assets\Multiplayer\Flag\CapturableFlag.js" />
+     <Compile Include="Assets\Multiplayer\Flag\CapturingFlag.js" />
+     <Compile Include="Assets\Multiplayer\Flag\HoldingFlag.js" />
      <Compile Include="Assets\Multiplayer\LevelManager.js" />
+     <Compile Include="Assets\Multiplayer\MachineRepairer.js" />
      <Compile Include="Assets\Multiplayer\MultiplayerGUI.js" />
      <Compile Include="Assets\Multiplayer\Networking\BattleAppearanceManagerNetworked.js" />
      <Compile Include="Assets\Multiplayer\Networking\GameStarter.js" />
@@ -103,6 +108,8 @@
      <Compile Include="Assets\Multiplayer\Networking\ProjectileEffectNetworked.js" />
      <Compile Include="Assets\Multiplayer\Networking\SimulatedServerTest.js" />
      <Compile Include="Assets\Multiplayer\Networking\TransformInterpolater.js" />
+     <Compile Include="Assets\Multiplayer\NodeLevelManager.js" />
+     <Compile Include="Assets\Multiplayer\PlayerData.js" />
      <Compile Include="Assets\PlaneColor.js" />
      <Compile Include="Assets\RobotPieces\Activators\Activator.js" />
      <Compile Include="Assets\RobotPieces\Activators\KeyBindedActivator.js" />
@@ -144,8 +151,8 @@
      <None Include="Assets\Photon Unity Networking\readme.txt" />
      <None Include="Assets\Plugins\Photon3Unity3D.xml" />
      <None Include="Assets\Photon Unity Networking\changelog.txt" />
- <Reference Include="Assets\Plugins\Photon3Unity3D">
- <HintPath>Assets\Plugins\Photon3Unity3D.dll</HintPath>
+ <Reference Include="Photon3Unity3D">
+ <HintPath>/Users/kinggryan/MachineBuilder/Assets/Plugins/Photon3Unity3D.dll</HintPath>
  </Reference>
   </ItemGroup>
   <ItemGroup>

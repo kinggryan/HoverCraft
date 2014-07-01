@@ -45,6 +45,19 @@ function ReceiveDamage (damage : int)
 		else
 			associatedJoint.breakForce = associatedJointMaxBreakStrength * currentHealth / pieceMaxHealth;
 	}
+	
+	if(gameObject.GetComponent(MachineRepairer) != null) {
+		gameObject.Destroy(gameObject.GetComponent(MachineRepairer));
+	}
+	
+	// Send message to held flag that we received damage.
+	var flag : HoldingFlag = GetComponent(HoldingFlag);
+	if(flag == null)
+		flag = GetComponentInParent(HoldingFlag);
+		
+	if(flag != null) {
+		flag.ReceiveDamage(damage);
+	}
 }
 
 function EnableDisableDamage(on : boolean)
