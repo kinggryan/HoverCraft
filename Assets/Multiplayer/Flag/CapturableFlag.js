@@ -10,15 +10,47 @@ public var atHome : boolean = true;
 
 function Start() {
 	if(Network.isClient) {
-		gameObject.Destroy(collider);	// remove collider on clients. Collision detection handled on server
-		gameObject.Destroy(GetComponent(Collider),0);
-		gameObject.Destroy(rigidbody);
+		// remove collider and rigidbody on clients. Collision detection handled on server
+		var colliders = GetComponents(Collider);
+		
+		for(var col in colliders)
+			gameObject.Destroy(col,0);
+	
+		gameObject.Destroy(rigidbody);	
 	}
+	else {
+		GetComponent(TransformInterpolater).enabled = false;
+	
+		var newID = Network.AllocateViewID();
+		networkView.RPC("SetNetworkViewOwnerToServer",RPCMode.All,newID);
+	}
+}
+
+@RPC
+function SetNetworkViewOwnerToServer(viewID : NetworkViewID) {
+	networkView.viewID = viewID;
+	gameObject.Destroy(GetComponent(TransformInterpolater));
+	
+	// TODO get interpolater to work on flag
+	
+	/*var inter : TransformInterpolater = gameObject.AddComponent(TransformInterpolater);
+	inter.enabledSet = true;
+	if(Network.isClient)
+		inter.enabled = true;
+	else
+		inter.enabled = false; */
+	
+	Debug.LogError("Set View Owner to Server");
 }
 
 @RPC
 function AttachCapturingFlag(viewID : NetworkViewID) {
 	NetworkView.Find(viewID).gameObject.AddComponent(CapturingFlag);
+}
+
+@RPC
+function AttachReturningFlag(viewID : NetworkViewID) {
+	NetworkView.Find(viewID).gameObject.AddComponent(ReturningFlag);
 }
 
 /* Server Side Handles:
@@ -31,11 +63,13 @@ function OnTriggerStay(other : Collider) {
 	var otherPlayerData = other.GetComponent(PlayerData);
 	
 	if(otherPlayerData != null) {
-		if(controllingTeam == otherPlayerData.team) { // && they lack a returning flag component 
+		if(controllingTeam == otherPlayerData.team && otherPlayerData.GetComponent(ReturningFlag) == null) {
 			Debug.LogError("Returning Flag");
-			// attach returning flag component
+			var rFlag : ReturningFlag = otherPlayerData.gameObject.AddComponent(ReturningFlag);
+			rFlag.relatedFlag = this;
+			networkView.RPC("AttachReturningFlag",RPCMode.Others,other.networkView.viewID);
 		}
-		else if(otherPlayerData.GetComponent(CapturingFlag) == null) {
+		else if(otherPlayerData.team != controllingTeam && otherPlayerData.GetComponent(CapturingFlag) == null) {
 			Debug.LogError("Capturing Flag");
 			var cFlag : CapturingFlag = otherPlayerData.gameObject.AddComponent(CapturingFlag);
 			cFlag.relatedFlag = this;
@@ -54,6 +88,18 @@ function OnTriggerExit(other : Collider) {
 			if(otherPlayerFlag.relatedFlag == this)
 				otherPlayerFlag.networkView.RPC("DestroySelf",RPCMode.All);
 		}
+		
+		var otherPlayerReturningFlag : ReturningFlag = other.GetComponent(ReturningFlag);
+		
+		if(otherPlayerFlag != null) {
+			if(otherPlayerFlag.relatedFlag == this)
+				otherPlayerFlag.networkView.RPC("DestroySelf",RPCMode.All);
+		}
 	}
 }
 
+function ReturnHome() {
+	transform.position = homeNode.transform.TransformPoint(homeNode.FLAG_RELATIVE_SPAWN_POINT);
+	rigidbody.velocity = Vector3.zero;
+	atHome = true;
+}

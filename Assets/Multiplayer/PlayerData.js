@@ -7,7 +7,7 @@ class PlayerData extends MonoBehaviour {
 
 	function PlayerData() {
 		if(!Network.isClient && !Network.isServer) {	// if offline, remove this
-			gameObject.Destroy(this);
+			//DelayedDestroy();
 		}
 		else {
 			if (playerDataArray == null)
@@ -16,9 +16,16 @@ class PlayerData extends MonoBehaviour {
 			playerDataArray.Add(this);				
 		}
 	}
+	
+	function Start() {
+		if(!Network.isClient && !Network.isServer) {	// if offline, remove this
+			gameObject.Destroy(this);
+		}
+	}
 
 	function OnDestroy() {
-		playerDataArray.Remove(this);
+		if(Network.isClient || Network.isServer)
+			playerDataArray.Remove(this);
 	}
 
 	// returns the player chasis piece for the given player

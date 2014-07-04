@@ -24,11 +24,15 @@ class TransformInterpolater extends MonoBehaviour
     var m_BufferedState : State[] = new State[20];
     // Keep track of what slots are used
     var m_TimestampCount : int;
+    
+    var enabledSet : boolean = false;
 
     function Awake()
     {
-        if (networkView.isMine)
-            this.enabled = false;//Only enable inter/extrapol for remote players
+    	if(!Network.isClient && !Network.isServer)	// if offline
+    		gameObject.Destroy(this);
+        else if (!enabledSet && networkView.isMine)
+            this.enabled = false; //Only enable inter/extrapol for remote players
     }
 
     function OnSerializeNetworkView(stream : BitStream, info : NetworkMessageInfo)
