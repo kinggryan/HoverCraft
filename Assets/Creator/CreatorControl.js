@@ -18,18 +18,31 @@ function Start () {
 					// 2 is change activation direction
 	highlightColor = Color(.5,.5,1);
 	
-	// initialize start body
-	var plate : GameObject = GameObject.Find("HoverPlate");
-	var plateAttachedPieces : MachinePieceAttachments = GameObject.Find("HoverPlate").GetComponent("MachinePieceAttachments");
-	plateAttachedPieces.clearAttachments();
-	plateAttachedPieces.connectedObjects[4] = GameObject.Instantiate(chasisType,plate.transform.TransformPoint(Vector3(0,3.5,0)),plate.transform.rotation);
-	plate.gameObject.GetComponent(FixedJoint).connectedBody = plateAttachedPieces.connectedObjects[4].rigidbody;
-	var otherAttachedPieces : MachinePieceAttachments = plateAttachedPieces.connectedObjects[4].GetComponent("MachinePieceAttachments");
-	otherAttachedPieces.clearAttachments();
-	otherAttachedPieces.connectedObjects[0] = plate.gameObject;
-	//rootPiece = plateAttachedPieces.connectedObjects[4].gameObject;
-	rootPiece = plate;
-	plate.rigidbody.freezeRotation = true;
+	var plate : GameObject;
+	
+	// initialize start body	
+	if(MachineDesignManager.loadFlag) {
+		MachineDesignManager.LoadMachineDesign(MachineDesignManager.loadFileName);
+		MachineDesignManager.loadFlag = false;
+	}
+	else {
+		plate = GameObject.Find("HoverPlate");
+		var plateAttachedPieces : MachinePieceAttachments = GameObject.Find("HoverPlate").GetComponent("MachinePieceAttachments");
+		plateAttachedPieces.clearAttachments();
+		plateAttachedPieces.connectedObjects[4] = GameObject.Instantiate(chasisType,plate.transform.TransformPoint(Vector3(0,3.5,0)),plate.transform.rotation);
+		plate.gameObject.GetComponent(FixedJoint).connectedBody = plateAttachedPieces.connectedObjects[4].rigidbody;
+		var otherAttachedPieces : MachinePieceAttachments = plateAttachedPieces.connectedObjects[4].GetComponent("MachinePieceAttachments");
+		otherAttachedPieces.clearAttachments();
+		otherAttachedPieces.connectedObjects[0] = plate.gameObject;
+		//rootPiece = plateAttachedPieces.connectedObjects[4].gameObject;
+		rootPiece = plate;
+		plate.rigidbody.freezeRotation = true;
+	}
+	
+	for(var currObj in GameObject.FindGameObjectsWithTag("piece")) {
+		if(currObj.rigidbody != null)
+			currObj.rigidbody.constraints = RigidbodyConstraints.FreezeAll;
+	}
 }
 
 function AddPieceToBlock(block : GameObject, side : Vector3, direction : Vector3, index : int){
@@ -115,10 +128,20 @@ function AddKeyBindedActivator(piece : Connector) {
 // Fixed Game Camera Behind Machine
 function SwitchToPlayMode()
 {
+	var plate : GameObject;
+
+	for(var currObj in GameObject.FindGameObjectsWithTag("piece")) {
+		if(currObj.rigidbody != null)
+			currObj.rigidbody.constraints = RigidbodyConstraints.None;
+		if(currObj.GetComponent(HoverPlateConnector) != null)
+			plate = currObj;
+	}
+
 	GameObject.Find("Main Camera").transform.position = Vector3(0,8,-12);
 	Debug.Log("Switching To Play Mode");
 	GameObject.Find("Main Camera").GetComponent(CameraMover).Destroy(GameObject.Find("Main Camera").GetComponent(CameraMover),0);
 	var follower : CameraRobotFollower = GameObject.Find("Main Camera").AddComponent("CameraRobotFollower");
 	follower.objToFollow = rootPiece;
-	rootPiece.AddComponent("HoverPlateMotionController");
+	
+	plate.AddComponent("HoverPlateMotionController");
 }

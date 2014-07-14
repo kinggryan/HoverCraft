@@ -78,6 +78,7 @@
      <Compile Include="Assets\Creator\SaveLoad\PieceTreeNode.js" />
      <Compile Include="Assets\Creator\SaveLoad\Serialization.js" />
      <Compile Include="Assets\Creator\StartGravity.js" />
+     <Compile Include="Assets\GameCamera\CameraRobotFollower.js" />
      <Compile Include="Assets\GameCamera\TargettingCamera.js" />
      <Compile Include="Assets\Menu\BuildMenu\BuildMenuGUI.js" />
      <Compile Include="Assets\Menu\GameLobby\GameLobbyGUI.js" />
@@ -116,7 +117,6 @@
      <Compile Include="Assets\RobotPieces\Activators\KeyBindedActivator.js" />
      <Compile Include="Assets\RobotPieces\Activators\TargettingActivator.js" />
      <Compile Include="Assets\RobotPieces\BattleManager.js" />
-     <Compile Include="Assets\RobotPieces\CameraRobotFollower.js" />
      <Compile Include="Assets\RobotPieces\Connectors\BombCannonConnector.js" />
      <Compile Include="Assets\RobotPieces\Connectors\ChasisConnector.js" />
      <Compile Include="Assets\RobotPieces\Connectors\Connector.js" />

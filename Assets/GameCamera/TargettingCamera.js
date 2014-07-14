@@ -7,112 +7,121 @@
 
 public var objToFollow : Connector;
 public var TARGET_HEIGHT = 15;
-public var TARGET_FOLLOW_DISTANCE = 40;
+public var TARGET_FOLLOW_DISTANCE = 20;
 public var CORRECTION_SPEED = 100;
 public var LOOK_AHEAD_DISTANCE = 24.0;
 public var MAX_TURN_SPEED_RADIANS = Mathf.PI;
 private var targetLocation : Vector3;
 private var targetLookAt : Vector3;
 private var crosshair: Texture;
-private var crosshairLocationWorldSpace : Vector3;
+public var crosshairLocationWorldSpace : Vector3;
 private var crosshairSize = 100;
 private var mousePosition : Vector2;
+private var vectorToCrosshair : Vector3;
+
+private var XAimLimits : float;
+private var YAimLimits : float;
+private var	xAngle : float;
+private var yAngle : float;
+private var aimSpeed : float;
+private var initialRotation : Quaternion;
 
 function Start () {
-	transform.position = Vector3(0,8,-12);
-	transform.rotation = Quaternion.LookRotation( objToFollow.transform.position - transform.position,Vector3.up);
-//	crosshair = AssetDatabase.LoadAssetAtPath("Assets/GameCamera/crosshair.png",Texture);
+	crosshairLocationWorldSpace = objToFollow.transform.TransformPoint(0,LOOK_AHEAD_DISTANCE,0);
+	
+	Debug.Log(crosshairLocationWorldSpace);
+	Debug.Log(objToFollow.transform.up);
+	Debug.Log(objToFollow.transform.TransformPoint(0,0,0));
+	Debug.Log(objToFollow.transform.TransformPoint(0,1,0));
+
+	transform.position = objToFollow.transform.position + -8*objToFollow.transform.up + 4* Vector3.up;
+//	transform.rotation = Quaternion.LookRotation( crosshairLocationWorldSpace - objToFollow.transform.position,Vector3.up);
+	transform.LookAt(crosshairLocationWorldSpace);
+	crosshair = AssetDatabase.LoadAssetAtPath("Assets/GameCamera/crosshair.png",Texture);
 	Screen.showCursor = false;
 	
-	// attach configurable joint in place of fixed joint
-/*	var attachedBody = objToFollow.mainJoint.connectedBody;
-	objToFollow.Destroy(objToFollow.mainJoint);
-	objToFollow.mainJoint = objToFollow.gameObject.AddComponent(ConfigurableJoint);
-	objToFollow.mainJoint.connectedBody = attachedBody;
+	vectorToCrosshair = objToFollow.transform.InverseTransformPoint(crosshairLocationWorldSpace);
 	
-	// configure the joint
-	var tempJoint : ConfigurableJoint = objToFollow.mainJoint;
-	tempJoint.xMotion = ConfigurableJointMotion.Locked;
-	tempJoint.yMotion = ConfigurableJointMotion.Locked;
-	tempJoint.zMotion = ConfigurableJointMotion.Locked;
-	tempJoint.angularXMotion = ConfigurableJointMotion.Limited;
-	tempJoint.angularYMotion = ConfigurableJointMotion.Limited;
-	tempJoint.angularZMotion = ConfigurableJointMotion.Limited;
-	tempJoint.lowAngularXLimit.limit = 0;
-	tempJoint.highAngularXLimit.limit = 0;
-	tempJoint.angularZLimit.limit = 0;
-	tempJoint.angularYLimit.limit = 0;
-	tempJoint.anchor = Vector3.zero; */
+	// set up limits
+	var BM : BattleManager = objToFollow.GetComponent(BattleManager);
+	XAimLimits = BM.XAimLimits;
+	YAimLimits = BM.YAimLimits;
+	xAngle = 0;
+	yAngle = 0;
+	aimSpeed = BM.aimDegreesPerSecond;
+	
+	initialRotation = objToFollow.transform.localRotation;
 }
 
 function Update () {
-	var followDir : Vector3 = Vector3(-objToFollow.transform.up.x,0,-objToFollow.transform.up.z);
+	var sensitivityX = 15F;
+	var sensitivityY = 15F;
 	
-	if(followDir.magnitude != 0) {
-		followDir *= TARGET_FOLLOW_DISTANCE / followDir.magnitude;
-		//targetLookAt = followDir * -LOOK_AHEAD_DISTANCE / followDir.magnitude;
-	}
+	var aimSpeedDT = Time.deltaTime * aimSpeed;
 	
-	crosshairLocationWorldSpace = objToFollow.transform.position + LOOK_AHEAD_DISTANCE*objToFollow.transform.up;
-	
-	// modify crosshair based on mouse
-	var modificationVector : Vector3 = (camera.ScreenToWorldPoint(Vector3(Input.mousePosition.x,Input.mousePosition.y,1)) - camera.ScreenToWorldPoint(Vector3(mousePosition.x,mousePosition.y,1)));
-	modificationVector.Normalize();
-//	crosshairLocationWorldSpace += LOOK_AHEAD_DISTANCE*modificationVector;
-	
-	targetLookAt = crosshairLocationWorldSpace;
-
-	targetLocation = Vector3(objToFollow.transform.position.x+followDir.x,objToFollow.transform.position.y + TARGET_HEIGHT,objToFollow.transform.position.z+followDir.z);
-	
-	var step = Time.deltaTime * CORRECTION_SPEED;
-		
-//	transform.position = targetLocation;		
-		
-	transform.position = Vector3.MoveTowards(transform.position,targetLocation,step);
-//	transform.position = objToFollow.transform.TransformPoint(Vector3(0,15,-6));
-//	transform.LookAt(objToFollow.transform.position + targetLookAt);
-	transform.LookAt(crosshairLocationWorldSpace);
-//	crosshairLocationWorldSpace = objToFollow.transform.position + targetLookAt;
-	
-	// get the movement amount and rotate.
-	var lookPoint = objToFollow.transform.position + 10*objToFollow.transform.up;
-	Debug.Log(lookPoint);
-	//var rotatedUpwards = Vector3.RotateTowards(objToFollow.transform.up,crosshairLocationWorldSpace,.01,1);
-	objToFollow.transform.RotateAround(Vector3.zero,Vector3.Cross(objToFollow.transform.up,crosshairLocationWorldSpace),1);
-	
-	// break and reform joint
-/*	var savedBody = objToFollow.mainJoint.connectedBody;
-	objToFollow.Destroy(objToFollow.mainJoint);
-	objToFollow.transform.rotation = Quaternion.LookRotation(objToFollow.transform.forward,rotatedUpwards);
-	objToFollow.mainJoint = objToFollow.gameObject.AddComponent(FixedJoint);
-	objToFollow.mainJoint.connectedBody = savedBody; */
-//	var tempJoint : ConfigurableJoint = objToFollow.mainJoint;
-	
-	if(Input.GetKey(KeyCode.RightArrow)) {
-	//	tempJoint.lowAngularXLimit.limit += 1;
-	//	tempJoint.highAngularXLimit.limit += 1;
-		//tempJoint.angularZLimit.limit += 15;
-//		tempJoint.angularYLimit.limit += 15;
-	//	objToFollow.transform.RotateAround(Vector3.zero,Vector3.up,1);
-	}
-	
-	var sensitivityX = 15f;
-	var sensitivityY = 15f;
-	var minimumY = -60F;
-	var maximumY = 60F;
-
-	var rotationX = objToFollow.transform.localEulerAngles.y + Input.GetAxis("Mouse X") * sensitivityX;
-			
+	// get rotation
 	var rotationY = Input.GetAxis("Mouse Y") * sensitivityY;
-	rotationY = Mathf.Clamp (rotationY, minimumY, maximumY);
-			
-	objToFollow.transform.localEulerAngles = new Vector3(-rotationY, rotationX, 0);	
+	rotationY = Mathf.Clamp (rotationY, -aimSpeedDT, aimSpeedDT);
 	
-	// store mouse pos
-	mousePosition = Input.mousePosition;
+	var rotationX = Input.GetAxis("Mouse X") * sensitivityX;
+	rotationX = Mathf.Clamp(rotationX, -aimSpeedDT, aimSpeedDT);
+	
+	xAngle += rotationX;
+	yAngle += rotationY;
+	var diff : float;
+	
+	// apply limits
+	if(xAngle > XAimLimits) {
+		diff = xAngle - XAimLimits;
+		xAngle = XAimLimits;
+		rotationX -= diff;
+	}
+	if(xAngle < -XAimLimits) {
+		diff = xAngle + XAimLimits;
+		xAngle = -XAimLimits;
+		rotationX -= diff;
+	}
+	if(yAngle > YAimLimits) {
+		diff = yAngle - YAimLimits;
+		yAngle = YAimLimits;
+		rotationY -= diff;
+	}
+	if(yAngle < -YAimLimits) {
+		diff = yAngle + YAimLimits;
+		yAngle = -YAimLimits;
+		rotationY -= diff;
+	} 
+	
+	// rotate obj
+	objToFollow.transform.Rotate(0, rotationX, 0, Space.World);
+	objToFollow.transform.Rotate(rotationY,0,0);
+	
+	// positioin crosshair and camera
+	crosshairLocationWorldSpace = objToFollow.transform.position + LOOK_AHEAD_DISTANCE*objToFollow.transform.up; //objToFollow.transform.TransformPoint(0,LOOK_AHEAD_DISTANCE,0);
+		
+	transform.position = objToFollow.transform.position + -8*objToFollow.transform.up + 4*Vector3.up;//objToFollow.transform.TransformPoint(0,-8,0) + 4* Vector3.up;
+	transform.LookAt(crosshairLocationWorldSpace);
+	
+	// Activate piece
+	if(Input.GetMouseButtonDown(0))
+		objToFollow.Activate();
+	if(Input.GetMouseButtonUp(0))
+		objToFollow.DeActivate();
+}
+
+function FixedUpdate()
+{
+	if(Input.GetMouseButton(0))
+	{
+		objToFollow.FixedActivate();
+	}
 }
 
 function OnGUI () {
 	var targetPoint : Vector3 = camera.WorldToScreenPoint(crosshairLocationWorldSpace);
 	GUI.DrawTexture(Rect(targetPoint.x-50,targetPoint.y-50,100,100),crosshair);
+}
+
+function OnDestroy() {
+	objToFollow.transform.rotation = initialRotation;
 }

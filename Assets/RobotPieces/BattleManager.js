@@ -22,9 +22,24 @@ public var contactEffect : GameObject = null;
 
 public var BAM : BattleAppearanceManagerNetworked;
 
+// Joint Break Simulator
+public var 	jointBreakStrength : float = 100000;
+public var  effectiveMass : float = 3.0;
+private var lastStepVelocity : Vector3;
+private var lastStepPosition : Vector3;
+
+public var  XAimLimits : float = 45.0;
+public var  YAimLimits : float = 45.0;
+public var  aimDegreesPerSecond : float = 90;
+
 function Start () {
 	currentHealth = pieceMaxHealth;
 	BAM = GetComponent(BattleAppearanceManagerNetworked);
+	lastStepVelocity = Vector3.zero;
+	lastStepPosition = transform.position;
+	
+	if(transform.parent != null) 
+		transform.parent.rigidbody.mass += effectiveMass;
 }
 
 function CauseDamage (collidedObj : BattleManager)
@@ -121,4 +136,30 @@ function Update() {
 		heat = 0;
 		
 	renderer.material.color = Color(1.0,(1.0*maximumFireHeat - heat)/(1.0*maximumFireHeat),(1.0*maximumFireHeat - heat)/(1.0*maximumFireHeat),1);
+}
+
+function FixedUpdate() {
+	if(transform.parent != null) {
+		var thisStepVelocity = transform.position - lastStepPosition;
+		var velocityChange = thisStepVelocity - lastStepVelocity;
+		var acceleration = velocityChange / Time.deltaTime;
+	
+		lastStepVelocity = thisStepVelocity;
+		lastStepPosition = transform.position;
+	
+		var forceApplied = (effectiveMass * acceleration).magnitude;
+	
+		if (forceApplied > jointBreakStrength) {
+			// break joint by unparenting and setting rigidbody to be non kinematic
+			transform.parent.rigidbody.mass -= effectiveMass;
+			transform.parent = null;
+			var rigid : Rigidbody = gameObject.AddComponent(Rigidbody);
+			rigid.mass = effectiveMass;
+			gameObject.Destroy(this);
+		}
+	}
+}
+
+function GetVelocity() {
+	return lastStepVelocity;
 }

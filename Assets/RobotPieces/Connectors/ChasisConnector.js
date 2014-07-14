@@ -7,6 +7,12 @@ public class ChasisConnector extends Connector
 	function Start (){
 		connectedCount = 1;
 	}
+	
+	function Update() {
+		if(Input.GetKeyDown("p")) {
+			Debug.Log(rigidbody.centerOfMass);
+		}
+	}
 
 	function Connect(blockObject : GameObject, attachPoint : Vector3, attachDirection : Vector3) {
 		var worldSpaceSide : Vector3 = blockObject.transform.TransformPoint(attachPoint);

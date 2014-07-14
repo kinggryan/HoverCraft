@@ -9,7 +9,16 @@ private var CORRECTION_SPEED = 100;
 private var LOOK_AHEAD_DISTANCE = 24;
 
 function Start () {
-	transform.position = Vector3(0,8,-12);
+	var followDir : Vector3 = Vector3(-objToFollow.transform.forward.x,0,-objToFollow.transform.forward.z);
+	
+	if(followDir.magnitude != 0) {
+		followDir *= TARGET_FOLLOW_DISTANCE / followDir.magnitude;
+		targetLookAt = followDir * -LOOK_AHEAD_DISTANCE / followDir.magnitude;
+	}
+
+	targetLocation = Vector3(objToFollow.transform.position.x+followDir.x,objToFollow.transform.position.y + TARGET_HEIGHT,objToFollow.transform.position.z+followDir.z);
+
+	transform.position = targetLocation;
 	transform.rotation = Quaternion.LookRotation( objToFollow.transform.position - transform.position,Vector3.up);
 }
 

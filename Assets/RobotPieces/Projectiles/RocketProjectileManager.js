@@ -30,7 +30,7 @@ function Start () {
 	Invoke("StopAcceleration",.8);
 	
 	rigidbody.AddRelativeForce(Vector3(0,200,0));
-	rigidbody.velocity = relatedBM.rigidbody.velocity;
+	rigidbody.velocity = relatedBM.GetVelocity();
 }
 
 function OnCollisionEnter(collision:Collision)

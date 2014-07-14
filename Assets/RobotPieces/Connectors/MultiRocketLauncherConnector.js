@@ -25,7 +25,7 @@ public class MultiRocketLauncherConnector extends Connector
 			
 		transform.parent = blockObject.transform;
 		
-		gameObject.AddComponent(KeyBindedActivator).key = "1";
+		gameObject.AddComponent(TargettingActivator).key = "1";
 		loaded = true;
 	}
 	
@@ -62,7 +62,7 @@ public class MultiRocketLauncherConnector extends Connector
 		// rotate around the hinge joint
 		var anchorPoint : Vector3 = Vector3.zero;
 		transform.RotateAround(transform.TransformPoint(anchorPoint),axis,-angleToRotate);
-		rigidbody.angularVelocity = Vector3.zero;
+	//	rigidbody.angularVelocity = Vector3.zero;
 				
 		DrawRotationArrow();
 	}

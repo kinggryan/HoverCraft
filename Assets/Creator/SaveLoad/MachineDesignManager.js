@@ -6,11 +6,6 @@ static public var loadFileName : String;
 function Start () {
 	// Set up piece dictionary
 	PieceDictionary.InitializeDictionary();
-	
-	if(loadFlag)
-		LoadMachineDesign(loadFileName);
-	
-	loadFlag = false;
 }
 
 static function ConstructTreeFromGame()
@@ -64,10 +59,10 @@ static function BuildTreeRecursive(piece : GameObject, node : PieceTreeNode)
 	var connector : Connector = piece.GetComponent(Connector);
 	var parentPosition : Vector3;
 	
-	if(connector.mainJoint == null)
+	if(piece.transform.parent == null)
 		parentPosition = Vector3.zero;
 	else
-		parentPosition = connector.mainJoint.connectedBody.transform.position;
+		parentPosition = piece.transform.parent.position;
 	
 	var activator : KeyBindedActivator = piece.GetComponent(KeyBindedActivator);
 	var activatorKey : char;
@@ -93,7 +88,8 @@ static function BuildTreeRecursive(piece : GameObject, node : PieceTreeNode)
 	var machinePieces : MachinePieceAttachments = piece.GetComponent(MachinePieceAttachments);
 	for(childPiece in machinePieces.connectedObjects)
 	{
-		if(childPiece != null && (connector.mainJoint == null || childPiece != connector.mainJoint.connectedBody.gameObject))
+		if(childPiece != null && (piece.transform.parent == null || childPiece.gameObject != piece.transform.parent.gameObject)
+							  && (connector.mainJoint == null || childPiece.rigidbody != connector.mainJoint.connectedBody))
 		{
 			var childNode = new PieceTreeNode();
 
@@ -120,8 +116,10 @@ static function BuildMachineFromTree(rootNode : PieceTreeNode){
 	Debug.Log("Root node : "+rootNode + " and piece type : "+rootNode.pieceType);
 	ccc.rootPiece = rootNode.ConstructSelfAndChildren(null,Vector3.zero);
 	for(currPiece in GameObject.FindGameObjectsWithTag("piece")){
-		currPiece.rigidbody.freezeRotation = true;
-		currPiece.rigidbody.detectCollisions = false;
+		if(currPiece.rigidbody != null) {
+			currPiece.rigidbody.freezeRotation = true;
+			currPiece.rigidbody.detectCollisions = false;
+		}
 	}
 	Debug.Log("Construction Complete");
 }
@@ -161,6 +159,7 @@ static function FixActivatorName(string : String) : String {
 }
 
 static function SaveMachineDesign(fileName : String) {
+	Debug.Log("Saving Machine Design...");
 	var rootNode = ConstructTreeFromGame();
 	SaveLoad.SaveMachineDesign(Application.dataPath+"/MachineDesigns/"+fileName,rootNode);
 }

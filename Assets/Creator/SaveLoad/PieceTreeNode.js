@@ -105,6 +105,7 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 		var id = nodeID;
 		
 		Debug.Log("Recursively Saving into file : "+id+", child count : "+children.length);
+		Debug.Log("Pos :  " + position);
 	
 		info.AddValue("pieceType_"+id, pieceType);
 		info.AddValue("positionX_"+id, position.x);
@@ -160,7 +161,7 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 				Debug.LogError("Piece type : "+pieceType + " and data type: " + pieceDataType);
 				newObj = Network.Instantiate(pieceDataType,position+offset, rotation, 0);
 			}
-			else if (!Network.isClient)
+			else if (!Network.isClient) // if we're not the client and not the server, we're offline
 				newObj = GameObject.Instantiate(pieceDataType,position+offset, rotation);
 		}
 		else {
@@ -168,7 +169,7 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 				newObj = Network.Instantiate(pieceDataType,position+offset,rotation,0);
 				newObj.networkView.RPC("ConnectNetwork",RPCMode.All,parent.networkView.viewID,position+offset,rotation);
 			}
-			else if (!Network.isClient) {
+			else if (!Network.isClient) { // if we're not the client and not the server, we're offline
 				newObj = GameObject.Instantiate(pieceDataType,position+offset,rotation);
 				var connector : Connector = newObj.GetComponent("Connector");
 				connector.Connect(parent,position+offset,rotation);

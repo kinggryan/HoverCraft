@@ -26,7 +26,11 @@ function Connect(blockObject : GameObject, relativePosition : Vector3, rotation 
 		
 		transform.position = relativePosition;
 		transform.rotation = rotation;
-		mainJoint.connectedBody = blockObject.rigidbody;
+		
+		if(mainJoint != null)
+			mainJoint.connectedBody = blockObject.rigidbody;
+		else // if main joint is null, we parent to the parent block object
+			transform.parent = blockObject.transform;
 		
 		var machinePieceInfo : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
 		machinePieceInfo.clearAttachments();
