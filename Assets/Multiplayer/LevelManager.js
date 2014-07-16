@@ -40,8 +40,12 @@ function StartGame() {
 function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : Vector3[]) {
 	for(var i = 0 ; i < playerNumberHashtable.Count ; i++) {
 		// Get player id for player number i; then load their design and build it at position i
+	//	Debug.LogError("player number and hashtable count" + playerNumberHashtable[i] +" "+ playerNumberHashtable.Count);
 		var pData : MachineDesignSaveData = MachineDesignNetworkManager.playerMachineDesigns[playerNumberHashtable[i]];
-		var pRoot = MachineDesignManager.BuildMachineFromTreeForMultiplayer(pData.rootNode,positions[i]);
+		var machinePosition = positions[i];
+		Debug.LogError(machinePosition + " " + i);
+		Debug.LogError("Machine : " + (pData == null));
+		var pRoot = MachineDesignManager.BuildMachineFromTreeForMultiplayer(pData.rootNode,machinePosition);
 		
 		Debug.LogError("Root : "+pRoot+" with view id : "+pRoot.networkView.viewID);
 		

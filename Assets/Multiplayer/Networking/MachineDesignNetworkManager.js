@@ -21,12 +21,12 @@ function SendMachineDesignToServer(filePath : String) {
 	// TODO make machine design folder at location relative to application directory - we may already do this
 	var fileData = SaveLoad.MachineDesignToBytes("MachineDesigns/"+filePath);
 	networkView.RPC("LoadMachineDesignOnServer",RPCMode.Server,fileData);
-	Debug.Log("Sent Design");
+	Debug.LogError("Sent Design");
 }
 
 @RPC
 function LoadMachineDesignOnServer(data : byte[], info : NetworkMessageInfo) {
-	Debug.Log("Data length as string: " + data.Length);
+	Debug.LogError("Data length as string: " + data.Length);
 	var rootNode = SaveLoad.LoadMachineDesignFromBytes(data);
 	playerMachineDesigns.Add(info.sender,rootNode);
 	
@@ -43,7 +43,7 @@ function PrintMessageOnDebugErrorLog(message : String) {
 	Debug.LogError(message);
 }
 
-function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : Vector3[]) {
+static function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : Vector3[]) {
 	for(var i = 0 ; i < playerNumberHashtable.Count ; i++) {
 		// Get player id for player number i; then load their design and build it at position i
 		var pData : MachineDesignSaveData = playerMachineDesigns[playerNumberHashtable[i]];

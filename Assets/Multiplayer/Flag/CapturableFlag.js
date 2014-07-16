@@ -8,6 +8,15 @@ public var controllingTeam : int;
 public var homeNode : CaptureNode;
 public var atHome : boolean = true;
 
+private var batteryIcon : Texture;
+private var mainCamera : Camera;
+private var cameraObjToFollow : GameObject;
+
+private var ICON_MAX_SCALE_DISTANCE = 15.0;
+private var ICON_MIN_SCALE_DISTANCE = 150.0;
+private var ICON_MAX_SCALE = 1.6;
+private var ICON_MIN_SCALE = 0.1;
+
 function Start() {
 	if(Network.isClient) {
 		// remove collider and rigidbody on clients. Collision detection handled on server
@@ -17,12 +26,38 @@ function Start() {
 			gameObject.Destroy(col,0);
 	
 		gameObject.Destroy(rigidbody);	
+		
+		mainCamera = GameObject.Find("Main Camera").camera;
+	//	var cameraFollower = mainCamera.GetComponent(CameraRobotFollower);
+	//	cameraObjToFollow = cameraFollower.objToFollow;
+		batteryIcon = Resources.Load("battery");
 	}
 	else {
 		GetComponent(TransformInterpolater).enabled = false;
 	
 		var newID = Network.AllocateViewID();
 		networkView.RPC("SetNetworkViewOwnerToServer",RPCMode.All,newID);
+	}
+}
+
+function OnGUI() {
+	if( Network.isClient ) {
+		var iconPositionWorldCoords : Vector3 = transform.position + (5 * Vector3.up);
+		var iconPositionScreenCoords = mainCamera.WorldToScreenPoint(iconPositionWorldCoords);
+	
+		if(iconPositionScreenCoords.z > 0) {
+			var scaleDistance = iconPositionScreenCoords.z;
+			//var scaleDistance = (iconPositionWorldCoords - cameraObjToFollow.transform.position).magnitude;
+			scaleDistance -= ICON_MAX_SCALE_DISTANCE;
+			
+			// Find scale on a range from 0 to 1
+			var scaling = (ICON_MIN_SCALE_DISTANCE - ICON_MAX_SCALE_DISTANCE) / scaleDistance;
+			
+			var scale = Mathf.Clamp(((ICON_MAX_SCALE - ICON_MIN_SCALE) * scaling) + ICON_MIN_SCALE,ICON_MIN_SCALE,ICON_MAX_SCALE);
+		
+			var iconWidth = 50;
+			GUI.DrawTexture(Rect(iconPositionScreenCoords.x - .5*iconWidth,Screen.height - iconPositionScreenCoords.y + .5*iconWidth,scale*iconWidth,scale*iconWidth),batteryIcon);
+		}
 	}
 }
 

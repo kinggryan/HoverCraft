@@ -37,7 +37,7 @@ function Start () {
 	transform.position = objToFollow.transform.position + -8*objToFollow.transform.up + 4* Vector3.up;
 //	transform.rotation = Quaternion.LookRotation( crosshairLocationWorldSpace - objToFollow.transform.position,Vector3.up);
 	transform.LookAt(crosshairLocationWorldSpace);
-	crosshair = AssetDatabase.LoadAssetAtPath("Assets/GameCamera/crosshair.png",Texture);
+	crosshair = Resources.Load("crosshair",Texture);
 	Screen.showCursor = false;
 	
 	vectorToCrosshair = objToFollow.transform.InverseTransformPoint(crosshairLocationWorldSpace);
@@ -123,5 +123,5 @@ function OnGUI () {
 }
 
 function OnDestroy() {
-	objToFollow.transform.rotation = initialRotation;
+	objToFollow.transform.localRotation = initialRotation;
 }
