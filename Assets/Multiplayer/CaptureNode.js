@@ -18,13 +18,13 @@ function Start() {
 	}
 	else {
 		// Create Flag on server and set relevant info
-		var flagPrefab : GameObject = Resources.Load("MapFlag",GameObject);
+	/*	var flagPrefab : GameObject = Resources.Load("MapFlag",GameObject);
 		var flag : GameObject = Network.Instantiate(flagPrefab,transform.position + Vector3.up*2.5,Quaternion.identity,0);
 		var flagInfo : CapturableFlag = flag.GetComponent(CapturableFlag);
 		
 		flagInfo.homeNode = this;
 		flagInfo.controllingTeam = controllingTeam;
-		relatedFlag = flag;
+		relatedFlag = flag; */
 		
 		CheckContested();
 	}
@@ -52,10 +52,17 @@ function CheckContested() {
 	contested = tempContested;
 	
 	if(contested) {
-		// spawn a flag
+		// Create Flag on server and set relevant info
+		var flagPrefab : GameObject = Resources.Load("MapFlag",GameObject);
+		var flag : GameObject = Network.Instantiate(flagPrefab,transform.position + Vector3.up*2.5,Quaternion.identity,0);
+		var flagInfo : CapturableFlag = flag.GetComponent(CapturableFlag);
+		
+		flagInfo.homeNode = this;
+		flagInfo.controllingTeam = controllingTeam;
+		relatedFlag = flag;
 	}
 	else {
-		// destroy flag
+		Network.Destroy(relatedFlag.gameObject);
 	}
 }
 
