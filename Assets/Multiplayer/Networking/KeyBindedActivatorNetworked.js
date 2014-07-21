@@ -27,6 +27,23 @@ class KeyBindedActivatorNetworked extends Activator {
 		}
 	}
 	
+	/* 
+	
+		Server-side Functions 
+		
+		*/
+	
+	function FixedUpdate() {
+		if(Network.isServer && keyPressed) {
+			attachedPiece.FixedActivateNetworked();
+		}
+	}
+	
+	/*
+		
+		Client-side Functions
+		
+		*/
 	@RPC
 	function CallActivate() {
 		attachedPiece.ActivateNetworked();
@@ -44,12 +61,6 @@ class KeyBindedActivatorNetworked extends Activator {
 		if(Network.player == player) {
 			controlledByMe = true;
 			relatedCamera = GameObject.Find("Main Camera");
-		}
-	}
-	
-	function FixedUpdate() {
-		if(Network.isServer && keyPressed) {
-			attachedPiece.FixedActivateNetworked();
 		}
 	}
 }

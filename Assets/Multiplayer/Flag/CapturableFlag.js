@@ -37,6 +37,9 @@ function Start() {
 	
 		var newID = Network.AllocateViewID();
 		networkView.RPC("SetNetworkViewOwnerToServer",RPCMode.All,newID);
+		
+		if(atHome)
+			rigidbody.isKinematic = true;
 	}
 }
 
@@ -75,7 +78,7 @@ function SetNetworkViewOwnerToServer(viewID : NetworkViewID) {
 	else
 		inter.enabled = false; */
 	
-	Debug.LogError("Set View Owner to Server");
+//	Debug.LogError("Set View Owner to Server");
 }
 
 @RPC
@@ -98,7 +101,7 @@ function OnTriggerStay(other : Collider) {
 	var otherPlayerData = other.GetComponent(PlayerData);
 	
 	if(otherPlayerData != null) {
-		if(controllingTeam == otherPlayerData.team && otherPlayerData.GetComponent(ReturningFlag) == null) {
+		if(controllingTeam == otherPlayerData.team && otherPlayerData.GetComponent(ReturningFlag) == null && !atHome) {
 			Debug.LogError("Returning Flag");
 			var rFlag : ReturningFlag = otherPlayerData.gameObject.AddComponent(ReturningFlag);
 			rFlag.relatedFlag = this;
@@ -137,4 +140,5 @@ function ReturnHome() {
 	transform.position = homeNode.transform.TransformPoint(homeNode.FLAG_RELATIVE_SPAWN_POINT);
 	rigidbody.velocity = Vector3.zero;
 	atHome = true;
+	rigidbody.isKinematic = true;
 }

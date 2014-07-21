@@ -33,6 +33,8 @@ class PieceDictionary{
 			pieceIndexTable.Add(8,Resources.Load("BombCannon",GameObject));
 			pieceIndexTable.Add(100,"KeyBindedActivator");
 			pieceIndexTable.Add(101,"KeyBindedActivatorNetworked");
+			pieceIndexTable.Add(102,"TargettingActivator");
+			pieceIndexTable.Add(103,"TargettingActivatorNetworked");
 			
 			initialized = true;
 			

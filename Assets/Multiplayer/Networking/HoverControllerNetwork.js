@@ -224,6 +224,8 @@ class HoverControllerNetwork extends MonoBehaviour {
 				if(i == 1)
 					liftPoint.z *= -1;
 			} 
+			
+			Debug.LogError("new controller attahed to " + gameObject);
 		}
 	}
 	

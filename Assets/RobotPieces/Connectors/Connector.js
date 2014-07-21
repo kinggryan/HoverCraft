@@ -53,8 +53,11 @@ function ConnectNetwork(objectView : NetworkViewID, relativePosition : Vector3, 
 		
 		transform.position = relativePosition;
 		transform.rotation = rotation;
-		mainJoint.connectedBody = blockObject.rigidbody;
-		
+		if(Network.isServer && mainJoint == null)
+			transform.parent = blockObject.transform;
+		else if(Network.isServer) // so there is a main joint
+			mainJoint.connectedBody = blockObject.rigidbody;
+			
 		var machinePieceInfo : MachinePieceAttachments = GetComponent("MachinePieceAttachments");
 		machinePieceInfo.clearAttachments();
 		machinePieceInfo.connectedObjects[0] = blockObject;

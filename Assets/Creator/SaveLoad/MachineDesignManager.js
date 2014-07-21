@@ -161,11 +161,11 @@ static function FixActivatorName(string : String) : String {
 static function SaveMachineDesign(fileName : String) {
 	Debug.Log("Saving Machine Design...");
 	var rootNode = ConstructTreeFromGame();
-	SaveLoad.SaveMachineDesign(Application.dataPath+"/MachineDesigns/"+fileName,rootNode);
+	SaveLoad.SaveMachineDesign("MachineDesigns/"+fileName,rootNode);
 }
 
 static function LoadMachineDesign(fileName : String) {
-	var data = SaveLoad.LoadMachineDesign(Application.dataPath+"/MachineDesigns/"+fileName);
+	var data = SaveLoad.LoadMachineDesign("MachineDesigns/"+fileName);
 	BuildMachineFromTree(data.rootNode);
 }
 

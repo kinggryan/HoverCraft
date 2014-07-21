@@ -11,10 +11,13 @@ public var UNCAPTURABLE_TIME : float = 30.0;	// amount of time a node is uncaptu
 public var MAXIMUM_REPAIR_DISTANCE : float = 8.0;
 public var FLAG_RELATIVE_SPAWN_POINT : Vector3 = Vector3(0,0,2.5);
 
+private var showTimer : boolean;				// shows time until capturable again when true
+private var timeRemaining : float;
+
 function Start() {
 	if(Network.isClient) {
 		// set the color based on starting team
-		ChangeTeam(controllingTeam);	
+		ChangeTeam(controllingTeam,false);	
 	}
 	else {
 		// Create Flag on server and set relevant info
@@ -26,6 +29,7 @@ function Start() {
 		flagInfo.controllingTeam = controllingTeam;
 		relatedFlag = flag; */
 		
+		showTimer = false;
 		CheckContested();
 	}
 }
@@ -52,14 +56,17 @@ function CheckContested() {
 	contested = tempContested;
 	
 	if(contested) {
-		// Create Flag on server and set relevant info
-		var flagPrefab : GameObject = Resources.Load("MapFlag",GameObject);
-		var flag : GameObject = Network.Instantiate(flagPrefab,transform.position + Vector3.up*2.5,Quaternion.identity,0);
-		var flagInfo : CapturableFlag = flag.GetComponent(CapturableFlag);
+		if(relatedFlag == null) {
+			// Create Flag on server and set relevant info
+			var flagPrefab : GameObject = Resources.Load("MapFlag",GameObject);
+			var flag : GameObject = Network.Instantiate(flagPrefab,transform.position + Vector3.up*2.5,Quaternion.identity,0);
+			var flagInfo : CapturableFlag = flag.GetComponent(CapturableFlag);
 		
-		flagInfo.homeNode = this;
-		flagInfo.controllingTeam = controllingTeam;
-		relatedFlag = flag;
+			flagInfo.homeNode = this;
+			flagInfo.atHome = true;
+			flagInfo.controllingTeam = controllingTeam;
+			relatedFlag = flag;
+		}
 	}
 	else {
 		Network.Destroy(relatedFlag.gameObject);
@@ -69,7 +76,7 @@ function CheckContested() {
 function Capture(team : int) {
 	controllingTeam = team;
 	
-	networkView.RPC("ChangeTeam",RPCMode.Others,team);
+	networkView.RPC("ChangeTeam",RPCMode.Others,team,true);
 	
 	for(node in adjacentNodes) 
 		node.CheckContested();
@@ -80,8 +87,10 @@ function Capture(team : int) {
 }
 
 function MarkCapturable(delay : float) {
+	networkView.RPC("ToggleDisplayTimer",RPCMode.Others,true);
 	yield WaitForSeconds(delay);
 	
+	networkView.RPC("ToggleDisplayTimer",RPCMode.Others,false);
 	capturable = true;
 	CheckContested();
 }
@@ -108,11 +117,11 @@ function OnTriggerEnter(other : Collider) {
 	**********************/
 	
 @RPC
-function ChangeTeam(team : int) {
+function ChangeTeam(team : int, showText : boolean) {
 	switch(team) {
-		case -1 : renderer.material.SetColor("_Color",Color.white); break;
-		case  0 : renderer.material.SetColor("_Color",Color.red); break;
-		case  1 : renderer.material.SetColor("_Color",Color.blue); break;
+		case -1 : renderer.material.SetColor("_Color",Color.white); HUDManager.ShowText("Set Neutral?"); break;
+		case  0 : renderer.material.SetColor("_Color",Color.red); HUDManager.ShowText("Captured for Red!"); break;
+		case  1 : renderer.material.SetColor("_Color",Color.blue); HUDManager.ShowText("Captured for Blue!"); break;
 		default : break;
 	}
 }
@@ -131,4 +140,38 @@ function OnMouseDown() {
 		}
 	}
 	
+}
+
+@RPC
+function ToggleDisplayTimer(turnOn : boolean) {
+	if(turnOn) {
+		showTimer = true;
+		timeRemaining = UNCAPTURABLE_TIME;
+	}
+	else {
+		showTimer = false;
+		timeRemaining = 0;
+		HUDManager.ShowText("Node Capturable!");
+	}
+}
+
+function OnGUI() {
+	if(showTimer) {
+		var mainCamera = GameObject.Find("Main Camera").camera;
+		var iconPositionWorldCoords : Vector3 = transform.position + (3 * Vector3.up);
+		var iconPositionScreenCoords = mainCamera.WorldToScreenPoint(iconPositionWorldCoords);
+		
+		var displayTime = Mathf.FloorToInt(timeRemaining);
+		
+		if(iconPositionScreenCoords.z > 0) {
+			var textWidth = 25;
+			GUI.Label(Rect(iconPositionScreenCoords.x - .5*textWidth,Screen.height - iconPositionScreenCoords.y + .5*textWidth,textWidth,textWidth),""+displayTime);
+		}
+	}
+}
+
+function Update() {
+	if(showTimer) {
+		timeRemaining -= Time.deltaTime;
+	}
 }

@@ -6,11 +6,13 @@ var health		: float	= 200;
 var HUDTexture	:	Texture;
 var flagCaptureObject : GameObject;
 
+private var effectiveMass = 3.0;
+
 function Start() {
 	flagCaptureObject = Resources.Load("MapFlag",GameObject);
-	
-	if(Network.isServer)
-		TestBreak();
+	if(Network.isServer) {
+		gameObject.rigidbody.mass += effectiveMass;
+	}
 }
 
 /*****************
@@ -48,7 +50,15 @@ function ReceiveDamage(damage : float) {
 		}
 		
 		var newFlag = Network.Instantiate(flagCaptureObject,transform.position,Quaternion.identity,0);
+		var flagInfo = newFlag.GetComponent(CapturableFlag);
+		flagInfo.atHome = false;
 		newFlag.rigidbody.AddForce(Vector3(popVelocity * popDirection.x, popVelocity * popDirection.y, verticalPopVelocity));
+	}
+}
+
+function OnDestroy() {
+	if(Network.isServer) {
+		gameObject.rigidbody.mass -= effectiveMass;
 	}
 }
 

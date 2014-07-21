@@ -87,7 +87,7 @@ class NodeLevelManager extends LevelManager {
 		
 			if(teamToAddTo == 0) {
 				RedTeam.Add(unteamedPlayers[playerIndex]);
-				PlayerData.GetPlayerData(unteamedPlayers[playerIndex]).SetTeamOnAllClients(2);
+				PlayerData.GetPlayerData(unteamedPlayers[playerIndex]).SetTeamOnAllClients(0);
 				networkView.RPC("AssignPlayerToTeam",RPCMode.Others,unteamedPlayers[playerIndex],0);
 			}
 			else {

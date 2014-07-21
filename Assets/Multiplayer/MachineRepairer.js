@@ -24,7 +24,7 @@ function Repair() {
 	var position = transform.position;
 	var rotation = transform.rotation;
 	
-	var levelManager : LevelManager = GameObject.Find("MultiplayerControl").GetComponent(LevelManager);
+	var levelManager : LevelManager = GameObject.Find("LevelManager").GetComponent(LevelManager);
 
 	levelManager.networkView.RPC("RepairMachine",RPCMode.Server,networkView.viewID,controller,position,rotation);
 }
