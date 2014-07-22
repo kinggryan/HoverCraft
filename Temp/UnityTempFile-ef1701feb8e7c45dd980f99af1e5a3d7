@@ -39,14 +39,11 @@
 -define:ENABLE_NAVMESH_CARVING
 -define:ENABLE_DUCK_TYPING
 -define:ENABLE_SINGLE_INSTANCE_BUILD_SETTING
+-define:DEVELOPMENT_BUILD
 -define:ENABLE_PROFILER
--define:UNITY_EDITOR
--define:UNITY_EDITOR_OSX
--r:'/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll'
+-r:'/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/Managed/UnityEngine.dll'
 -r:'Library/ScriptAssemblies/Assembly-CSharp-firstpass.dll'
 -r:'Assets/Plugins/Photon3Unity3D.dll'
--r:'/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll'
--i:UnityEditor
 'Assets/(Old)MachinePieces/Arm2Connector.js'
 'Assets/(Old)MachinePieces/ArmConnector.js'
 'Assets/(Old)MachinePieces/Arrow.js'
@@ -110,6 +107,7 @@
 'Assets/Multiplayer/Networking/MachineDesignNetworkManager.js'
 'Assets/Multiplayer/Networking/Matchmaker.js'
 'Assets/Multiplayer/Networking/NetworkManager.js'
+'Assets/Multiplayer/Networking/PositionDebugger.js'
 'Assets/Multiplayer/Networking/ProjectileEffectNetworked.js'
 'Assets/Multiplayer/Networking/SimulatedServerTest.js'
 'Assets/Multiplayer/Networking/TransformInterpolater.js'

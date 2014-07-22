@@ -1,12 +1,17 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/RobotPieces/Activators/TargetterNetworked.js">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Multiplayer/Networking/PositionDebugger.js">
     <Files>
-      <File FileName="Assets/Multiplayer/MachineRepairer.js" Line="1" Column="1" />
-      <File FileName="Assets/Multiplayer/LevelManager.js" Line="1" Column="1" />
-      <File FileName="Assets/Multiplayer/Flag/HoldingFlag.js" Line="1" Column="1" />
       <File FileName="Assets/RobotPieces/Activators/TargetterNetworked.js" Line="3" Column="40" />
       <File FileName="Assets/Multiplayer/Networking/KeyBindedActivatorNetworked.js" Line="1" Column="1" />
+      <File FileName="Assets/RobotPieces/Activators/TargettingActivatorNetworked.js" Line="1" Column="1" />
+      <File FileName="Assets/RobotPieces/Activators/TargettingActivator.js" Line="1" Column="1" />
+      <File FileName="Assets/Creator/SaveLoad/PieceDictionary.js" Line="1" Column="1" />
+      <File FileName="Assets/Creator/SaveLoad/PieceTreeNode.js" Line="1" Column="1" />
+      <File FileName="Assets/RobotPieces/Connectors/Connector.js" Line="1" Column="1" />
+      <File FileName="Assets/Multiplayer/LevelManager.js" Line="62" Column="3" />
+      <File FileName="Assets/Multiplayer/Networking/HoverControllerNetwork.js" Line="1" Column="1" />
+      <File FileName="Assets/Multiplayer/Networking/PositionDebugger.js" Line="1" Column="15" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

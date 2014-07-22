@@ -43,9 +43,10 @@ function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : V
 	//	Debug.LogError("player number and hashtable count" + playerNumberHashtable[i] +" "+ playerNumberHashtable.Count);
 		var pData : MachineDesignSaveData = MachineDesignNetworkManager.playerMachineDesigns[playerNumberHashtable[i]];
 		var machinePosition = positions[i];
-		Debug.LogError(machinePosition + " " + i);
+		Debug.LogError("Machine Position " + machinePosition + " " + i);
 		Debug.LogError("Machine : " + (pData == null));
 		var pRoot = MachineDesignManager.BuildMachineFromTreeForMultiplayer(pData.rootNode,machinePosition);
+		Debug.LogError("Now root is at : "+pRoot.transform.position);
 		
 		Debug.LogError("Root : "+pRoot+" with view id : "+pRoot.networkView.viewID);
 		
@@ -59,6 +60,7 @@ function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : V
 		var machPieces : MachinePieceAttachments = pRoot.GetComponent(MachinePieceAttachments);
 		var plate = machPieces.connectedObjects[0];
 		var controller : HoverControllerNetwork = plate.AddComponent(HoverControllerNetwork);
+		Debug.LogError("plate : "+ plate);
 		controller.controller = playerNumberHashtable[i];
 
 		networkView.RPC("SetCameraForPlayer",RPCMode.All,playerNumberHashtable[i],plate.networkView.viewID);

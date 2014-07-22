@@ -158,7 +158,7 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 		if(parent == null) {
 			// if we're on a network and the server, instantiate through the network
 			if(Network.isServer) {
-				Debug.LogError("Piece type : "+pieceType + " and data type: " + pieceDataType + " with position " + position+offset);
+				Debug.LogError("Piece type : "+pieceType + " and data type: " + pieceDataType + " with position " + position + " and offset " + offset);
 				newObj = Network.Instantiate(pieceDataType,position+offset, rotation, 0);
 			}
 			else if (!Network.isClient) // if we're not the client and not the server, we're offline
@@ -201,6 +201,7 @@ class PieceTreeNode extends UnityEngine.Object implements ISerializable{
 		if(parent != null)
 			machPieces.connectedObjects[i] = parent;
 		
+		Debug.LogError("New obj pos : " + newObj.transform.position);
 		// return newly constructed object for parental connectedobjects
 		return newObj;
 	}

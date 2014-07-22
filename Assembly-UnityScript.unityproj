@@ -109,6 +109,7 @@
      <Compile Include="Assets\Multiplayer\Networking\MachineDesignNetworkManager.js" />
      <Compile Include="Assets\Multiplayer\Networking\Matchmaker.js" />
      <Compile Include="Assets\Multiplayer\Networking\NetworkManager.js" />
+     <Compile Include="Assets\Multiplayer\Networking\PositionDebugger.js" />
      <Compile Include="Assets\Multiplayer\Networking\ProjectileEffectNetworked.js" />
      <Compile Include="Assets\Multiplayer\Networking\SimulatedServerTest.js" />
      <Compile Include="Assets\Multiplayer\Networking\TransformInterpolater.js" />

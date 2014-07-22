@@ -59,10 +59,12 @@ static function BuildTreeRecursive(piece : GameObject, node : PieceTreeNode)
 	var connector : Connector = piece.GetComponent(Connector);
 	var parentPosition : Vector3;
 	
-	if(piece.transform.parent == null)
-		parentPosition = Vector3.zero;
-	else
+	if(piece.transform.parent == null && connector.mainJoint == null)
+		parentPosition = piece.transform.position;
+	else if(connector.mainJoint == null)
 		parentPosition = piece.transform.parent.position;
+	else
+		parentPosition = connector.mainJoint.connectedBody.transform.position;
 	
 	var activator : KeyBindedActivator = piece.GetComponent(KeyBindedActivator);
 	var activatorKey : char;
@@ -82,7 +84,7 @@ static function BuildTreeRecursive(piece : GameObject, node : PieceTreeNode)
 				
 //	Debug.Log("Pretest: " + AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject));
 //	Debug.Log("Test : " +PieceDictionary.GetIndexFromPieceType(AssetDatabase.LoadAssetAtPath("Assets/RobotPieces/"+RemoveClone(piece.ToString())+".prefab",GameObject)));
-	node.SetData(PieceDictionary.GetIndexFromPieceType(Resources.Load(RemoveClone(piece.ToString()),GameObject)),piece.transform.position,piece.transform.rotation,PieceDictionary.GetIndexFromPieceType(activatorString),activatorKey);
+	node.SetData(PieceDictionary.GetIndexFromPieceType(Resources.Load(RemoveClone(piece.ToString()),GameObject)),piece.transform.position - parentPosition,piece.transform.rotation,PieceDictionary.GetIndexFromPieceType(activatorString),activatorKey);
 	
 	// add children nodes
 	var machinePieces : MachinePieceAttachments = piece.GetComponent(MachinePieceAttachments);

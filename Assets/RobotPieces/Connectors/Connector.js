@@ -212,5 +212,12 @@ function EnableDisableMotor(mode : boolean)
 function DeActivate()
 {}
 
+// DEBUG
+
+function OnCollisionStay(collision : Collision) {
+//	if(Network.isServer)
+//		Debug.LogError("Collision " + collider + " " + collision.collider);
+}
+
 function AddMotionController() : MotionController
 { return null; }
