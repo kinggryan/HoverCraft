@@ -4,6 +4,7 @@
 
 static public var playerMachineDesigns : Hashtable;
 
+// Start() is called only when there's an instance of this class attached to an object in a room - ie, this happens only in the game lobby.
 function Start() {
 	if(NetworkManager.inServerMode)
 		playerMachineDesigns = new Hashtable();
@@ -26,6 +27,7 @@ function SendMachineDesignToServer(filePath : String) {
 
 @RPC
 function LoadMachineDesignOnServer(data : byte[], info : NetworkMessageInfo) {
+	// Save design tree to playerMachineDesigns hashtable for the player who sent the message
 	Debug.LogError("Data length as string: " + data.Length);
 	var rootNode = SaveLoad.LoadMachineDesignFromBytes(data);
 	playerMachineDesigns.Add(info.sender,rootNode);

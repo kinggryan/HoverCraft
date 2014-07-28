@@ -78,6 +78,7 @@
 'Assets/Creator/StartGravity.js'
 'Assets/GameCamera/CameraRobotFollower.js'
 'Assets/GameCamera/TargettingCamera.js'
+'Assets/GameCamera/TargettingCameraNetwork.js'
 'Assets/Menu/BuildMenu/BuildMenuGUI.js'
 'Assets/Menu/GameLobby/GameLobbyGUI.js'
 'Assets/Menu/GameLobby/LevelStarter.js'

@@ -20,17 +20,16 @@ function Start() {
 		ChangeTeam(controllingTeam,false);	
 	}
 	else {
-		// Create Flag on server and set relevant info
-	/*	var flagPrefab : GameObject = Resources.Load("MapFlag",GameObject);
-		var flag : GameObject = Network.Instantiate(flagPrefab,transform.position + Vector3.up*2.5,Quaternion.identity,0);
-		var flagInfo : CapturableFlag = flag.GetComponent(CapturableFlag);
-		
-		flagInfo.homeNode = this;
-		flagInfo.controllingTeam = controllingTeam;
-		relatedFlag = flag; */
-		
+		// Hide the uncapturable timer and check whether we're contested
 		showTimer = false;
 		CheckContested();
+		
+		// Increment number of controlled points for a team in the node level manager
+		var levelManager : NodeLevelManager = GameObject.Find("LevelManager").GetComponent(LevelManager);
+		if(controllingTeam == 0)
+			levelManager.RedTeamNumberOfControlledPoints++;
+		else if(controllingTeam == 1)
+			levelManager.BlueTeamNumberOfControlledPoints++;
 	}
 }
 
@@ -74,6 +73,7 @@ function CheckContested() {
 }
 
 function Capture(team : int) {
+	var previousTeam = controllingTeam;
 	controllingTeam = team;
 	
 	networkView.RPC("ChangeTeam",RPCMode.Others,team,true);
@@ -82,6 +82,19 @@ function Capture(team : int) {
 		node.CheckContested();
 		
 	capturable = false;
+	
+	// Increment and/or decrement number of controlled points for a team in the node level manager
+	var levelManager : NodeLevelManager = GameObject.Find("LevelManager").GetComponent(LevelManager);
+	if(team == 0)
+		levelManager.RedTeamNumberOfControlledPoints++;
+	else if(team == 1)
+		levelManager.BlueTeamNumberOfControlledPoints++;
+		
+	if(previousTeam == 0)
+		levelManager.RedTeamNumberOfControlledPoints--;
+	else if(previousTeam == 1)
+		levelManager.BlueTeamNumberOfControlledPoints--;
+	
 	
 	MarkCapturable(UNCAPTURABLE_TIME);	
 }

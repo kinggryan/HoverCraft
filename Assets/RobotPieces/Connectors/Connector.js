@@ -43,6 +43,8 @@ function Connect(blockObject : GameObject, relativePosition : Vector3, rotation 
 		machinePieceInfo = blockObject.GetComponent("MachinePieceAttachments");
 		for(var currObj : GameObject in machinePieceInfo.connectedObjects)
 			Physics.IgnoreCollision(collider,blockObject.collider);
+			
+		AddActivators();
 }
 
 // This connect function is what's called during loading via Network.
@@ -69,11 +71,14 @@ function ConnectNetwork(objectView : NetworkViewID, relativePosition : Vector3, 
 		machinePieceInfo = blockObject.GetComponent("MachinePieceAttachments");
 		for(var currObj : GameObject in machinePieceInfo.connectedObjects)
 			Physics.IgnoreCollision(collider,blockObject.collider);
+			
+		AddActivators();
 }
 
 // Called to add an activator across the network
 @RPC
 function AddActivator(activatorType : String, key : String) {
+	Debug.LogError("Adding activator");
 	var activator : Activator = gameObject.AddComponent(activatorType);
 	activator.key = key;
 	activator.attachedPiece = this;
@@ -212,7 +217,19 @@ function EnableDisableMotor(mode : boolean)
 function DeActivate()
 {}
 
-// DEBUG
+// Debug
+function AddActivators() {}
+
+@RPC
+function SetControllerOfMachine(player : NetworkPlayer) {
+	// TODO this is completely not robust
+	// Sets the controller to player in all activators and children
+	Debug.LogError("stuff");
+	for(var childActivator : TargettingActivatorNetworked in transform.GetComponentsInChildren(TargettingActivatorNetworked)) {
+		Debug.LogError("setting for child...");
+		childActivator.SetController(player);
+	}
+}
 
 function OnCollisionStay(collision : Collision) {
 //	if(Network.isServer)

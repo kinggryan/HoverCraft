@@ -5,38 +5,57 @@ import Photon;
 class GameLobbyGUI extends Photon.MonoBehaviour {
 	var machineName : String = "MyDesign";
 	var ready = false;
-	var playersReadyList : Hashtable;
+	var playersReadyList : Hashtable;	// says which players are ready to start and which are not
 
-	function Start() {	
-		// if we're the host, try to join our server's room until we do. If we're server, we've already connected
-		if(NetworkManager.inServerMode) {
-			Debug.LogError("Starting room with name : "+NetworkManager.savedLobbyName);
-			Debug.LogError(PhotonNetwork.CreateRoom(NetworkManager.savedLobbyName));
+	function Start() {
+		if(!Network.isClient && !Network.isServer) {
+			// if we are not connected to the unity network, we have just started a new session,
+			// so set up a server or attempt to connect to a server
+			// if we're the host, try to join our server's room until we do. If we're server, we've already connected
+			if(NetworkManager.inServerMode) {
+				Debug.LogError("Starting room with name : "+NetworkManager.savedLobbyName);
+				Debug.LogError(PhotonNetwork.CreateRoom(NetworkManager.savedLobbyName));
 			
-			// buffer connect to UnityNetwork via Photon RPC
-			var pView : PhotonView = PhotonView.Get(this);
-			Debug.LogError("pView butt : " +pView +"; id : " +pView.viewID);
-			//pView.RPC("TestRPC", PhotonNetwork.player);
-						
-			// start server
-			var useNat = !Network.HavePublicAddress();
-			Debug.Log("Init server... " + Network.InitializeServer(32, 25000, useNat));
-			var ip : ServerIPTransfer = GetComponent(ServerIPTransfer);
-			ip.IP = Network.player.ipAddress;
-			ip.port = NetworkManager.portNumber;
-			playersReadyList = new Hashtable();
-		 	NetworkManager.PlayerNumberHashtable = new Hashtable();
-			Debug.LogError("Hashtable Generated");
+				// buffer connect to UnityNetwork via Photon RPC
+				var pView : PhotonView = PhotonView.Get(this);
+							
+				// start server
+				var useNat = !Network.HavePublicAddress();
+				Debug.Log("Init server... " + Network.InitializeServer(32, 25000, useNat));
 			
-			if(PhotonNetwork.connected)
-				Debug.LogError("connected");
-			else
-				Debug.LogError("not connected...");
+				// Set up IP transfer so other players can connect to the established server
+				var ip : ServerIPTransfer = GetComponent(ServerIPTransfer);
+				ip.IP = Network.player.ipAddress;
+				ip.port = NetworkManager.portNumber;
+			
+				// Generate the player number and player ready lists
+				playersReadyList = new Hashtable();
+			 	NetworkManager.PlayerNumberHashtable = new Hashtable();
+			
+				if(PhotonNetwork.connected)
+					Debug.LogError("connected");
+				else
+					Debug.LogError("not connected...");
+			}
+			else {
+				// find the photon network lobby so we can get the server's ip
+				PhotonNetwork.autoJoinLobby = false;
+				PhotonNetwork.ConnectUsingSettings("1");
+				Debug.Log("Attempting to Connect");
+			}
 		}
-		else {
-			PhotonNetwork.autoJoinLobby = false;
-			PhotonNetwork.ConnectUsingSettings("1");
-			Debug.Log("Attempting to Connect");
+		else { 
+			// We are in a game session
+			if(Network.isServer) {
+				// Reset player ready table but don't reset player number hashtable. The machine Design hashtable will be reset
+				// when the room starts over in the MachineDesignNetworkManager
+				playersReadyList = new Hashtable();
+				for(var player in Network.connections)
+					playersReadyList.Add(player,false);
+			}
+			else {
+				// Clients don't have to do anything here
+			}
 		}
 	}	
 
@@ -87,11 +106,13 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 		}
 		
 		if(PhotonNetwork.inRoom)
-			GUI.Label(Rect(200,50,50,50),"Player Count : " + PhotonNetwork.room.playerCount);
+			// display # of players in room -1 (since the server should not count)
+			GUI.Label(Rect(200,50,50,50),"Player Count : " + (PhotonNetwork.room.playerCount - 1));
 		else
 			GUI.Label(Rect(200,50,50,50),"Not in room");
 		
 		if(NetworkManager.isHost && Network.isClient)
+			// if you're host and you're connected to the server, show the start game button
 			if(GUI.Button(Rect(15,125,100,100),"Start Game")) {
 				var nView : NetworkView = GetComponent("NetworkView");
 				// send RPC to start level to server, which checks that all machine designs are loaded. if they are, it starts the level.
@@ -101,6 +122,7 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 			
 		// machine name string
 		machineName = GUI.TextField(Rect(15,235,100,25),machineName);
+		
 		// if we click ready, then check it true if and only if the machine design exists. Also, tell server to load machine design.
 		if(!ready && GUI.Button(Rect(125,235,65,25),"Ready?")) {
 			var mdnm : MachineDesignNetworkManager = GetComponent(MachineDesignNetworkManager);
@@ -206,6 +228,10 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 		if(NetworkManager.inServerMode) {
 			Debug.Log("player disconnected; ip : " +player.ipAddress +"; player number : "+NetworkManager.PlayerNumberHashtable.Count);
 			NetworkManager.PlayerNumberHashtable.Remove(player);
+			
+			// if there's no one left once someone disconnects, then kill the server
+			if(Network.connections.Length == 1)
+				Application.Quit();
 		}
 	}
 }

@@ -20,8 +20,8 @@ private var aimSpeed : float;
 private var initialRotation : Quaternion;
 
 // input data
-private var rotationX : float;
-private var rotationY : float;
+public var rotationX : float;
+public var rotationY : float;
 private var clicked		: boolean;
 
 function Start () {
@@ -43,12 +43,14 @@ function OnSerializeNetworkView(stream : BitStream, info : NetworkMessageInfo) {
 	var tempY : float;
 
 	if (stream.isWriting) {
+		Debug.LogError("writing...");
 		tempX = rotationX;
 		tempY = rotationY;
 		stream.Serialize(tempX);
 		stream.Serialize(tempY);
 	} 
 	else {
+		Debug.LogError("reading...");
 		tempX = 0;
 		tempY = 0;
 		stream.Serialize(tempX);
@@ -120,7 +122,7 @@ function Update () {
 function ClientMouseStateChanged(clientClicked : boolean) {
 	var conn : Connector = GetComponent(Connector);
 	if(!clicked && clientClicked) {
-		conn.Activate();
+		conn.ActivateNetworked();
 	}
 	else if (clicked && !clientClicked) {
 		conn.DeActivate();

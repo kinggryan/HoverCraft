@@ -21,18 +21,24 @@ class TransformInterpolater extends MonoBehaviour
     public var interpolationBackTime : double = 0.15;
 
     // We store twenty states with "playback" information
-    var m_BufferedState : State[] = new State[20];
+    var m_BufferedState : State[];
     // Keep track of what slots are used
     var m_TimestampCount : int;
     
     var enabledSet : boolean = false;
 
     function Awake()
-    {
-    	if(!Network.isClient && !Network.isServer)	// if offline
+    {    
+    	if(!Network.isClient && !Network.isServer) {
+    		// if offline
     		gameObject.Destroy(this);
-        else if (!enabledSet && networkView.isMine)
+    	}	
+        else if (!enabledSet && networkView.isMine) {
             this.enabled = false; //Only enable inter/extrapol for remote players
+        }
+        else {	// we're enabled
+        	m_BufferedState = new State[20];
+        }
     }
 
     function OnSerializeNetworkView(stream : BitStream, info : NetworkMessageInfo)
@@ -43,8 +49,8 @@ class TransformInterpolater extends MonoBehaviour
         // Always send transform (depending on reliability of the network view)
         if (stream.isWriting)
         {
-            pos = transform.localPosition;
-            rot = transform.localRotation;
+            pos = transform.position;
+            rot = transform.rotation;
             stream.Serialize(pos);
             stream.Serialize(rot);
         }
@@ -116,8 +122,8 @@ class TransformInterpolater extends MonoBehaviour
                         t = ((interpolationTime - lhs.timestamp) / length);
 
                     // if t=0 => lhs is used directly
-                    transform.localPosition = Vector3.Lerp(lhs.pos, rhs.pos, t);
-                    transform.localRotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);
+                    transform.position = Vector3.Lerp(lhs.pos, rhs.pos, t);
+                    transform.rotation = Quaternion.Slerp(lhs.rot, rhs.rot, t);
 					return;
                 }
             }
@@ -128,8 +134,16 @@ class TransformInterpolater extends MonoBehaviour
         {
             var latest : State = m_BufferedState[0];
 
-            transform.localPosition = Vector3.Lerp(transform.localPosition, latest.pos, Time.deltaTime * 20 );
-            transform.localRotation = latest.rot;
+            transform.position = Vector3.Lerp(transform.position, latest.pos, Time.deltaTime * 20 );
+            transform.rotation = latest.rot;
         }
+    }
+    
+    function OnDisable() {
+    	Debug.LogError(gameObject + " disabled");
+    }
+    
+    function OnDestroy() {
+    	Debug.LogError(gameObject + " destroyed");
     }
 }

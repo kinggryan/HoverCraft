@@ -25,7 +25,11 @@ public class MultiRocketLauncherConnector extends Connector
 			
 		transform.parent = blockObject.transform;
 		
-		gameObject.AddComponent(TargettingActivator).key = "1";
+		if(Network.isServer)
+			networkView.RPC("AddActivator",RPCMode.All,"TargettingActivatorNetworked","1");
+		else if(!Network.isClient)
+			gameObject.AddComponent(TargettingActivator).key = "1";
+			
 		loaded = true;
 	}
 	
@@ -57,6 +61,11 @@ public class MultiRocketLauncherConnector extends Connector
 		DrawRotationArrow();
 	}
 	
+	function AddActivators() {
+		if(Network.isServer)
+			networkView.RPC("AddActivator",RPCMode.All,"TargettingActivatorNetworked","1");
+	}
+	
 	function rotate(angleToRotate: float, axis : Vector3)
 	{
 		// rotate around the hinge joint
@@ -80,6 +89,26 @@ public class MultiRocketLauncherConnector extends Connector
 			
 			for(var i = 0 ; i < numberOfRocketsToFire ; i++) {
 				var tempObj = GameObject.Instantiate(projectileType,transform.TransformPoint(-.4 + .8 * (1.0*i) / (numberOfRocketsToFire-1),0,0),transform.rotation);
+				tempObj.transform.RotateAround(tempObj.transform.position,transform.forward,maximumSpread - (1.0*i/numberOfRocketsToFire * 2 * maximumSpread));
+				//Debug.Log("Rotating: " + (-maximumSpread + (2.0*i/(numberOfRocketsToFire-1) * maximumSpread)));
+				var tempObjM : RocketProjectileManager = tempObj.GetComponent("RocketProjectileManager");
+				tempObjM.relatedBM = GetComponent("BattleManager");
+		//		yield WaitForSeconds(intraVolleyRocketDelay);
+			}
+			
+			StartCoroutine("Reload");
+			battleManager.AddHeat();
+		}
+	}
+	
+	function ActivateNetworked()
+	{
+		if(loaded && !battleManager.IsOverHeated())
+		{
+			loaded = false;
+			
+			for(var i = 0 ; i < numberOfRocketsToFire ; i++) {
+				var tempObj = Network.Instantiate(projectileType,transform.TransformPoint(-.4 + .8 * (1.0*i) / (numberOfRocketsToFire-1),0,0),transform.rotation,0);
 				tempObj.transform.RotateAround(tempObj.transform.position,transform.forward,maximumSpread - (1.0*i/numberOfRocketsToFire * 2 * maximumSpread));
 				//Debug.Log("Rotating: " + (-maximumSpread + (2.0*i/(numberOfRocketsToFire-1) * maximumSpread)));
 				var tempObjM : RocketProjectileManager = tempObj.GetComponent("RocketProjectileManager");

@@ -80,6 +80,7 @@
      <Compile Include="Assets\Creator\StartGravity.js" />
      <Compile Include="Assets\GameCamera\CameraRobotFollower.js" />
      <Compile Include="Assets\GameCamera\TargettingCamera.js" />
+     <Compile Include="Assets\GameCamera\TargettingCameraNetwork.js" />
      <Compile Include="Assets\Menu\BuildMenu\BuildMenuGUI.js" />
      <Compile Include="Assets\Menu\GameLobby\GameLobbyGUI.js" />
      <Compile Include="Assets\Menu\GameLobby\LevelStarter.js" />

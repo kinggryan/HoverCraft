@@ -8,7 +8,12 @@ public var controllingTeam : int;
 public var homeNode : CaptureNode;
 public var atHome : boolean = true;
 
+private var orangeBatteryIcon : Texture;
+private var blueBatteryIcon : Texture;
+private var neutralBatteryIcon : Texture;
+
 private var batteryIcon : Texture;
+
 private var mainCamera : Camera;
 private var cameraObjToFollow : GameObject;
 
@@ -30,7 +35,14 @@ function Start() {
 		mainCamera = GameObject.Find("Main Camera").camera;
 	//	var cameraFollower = mainCamera.GetComponent(CameraRobotFollower);
 	//	cameraObjToFollow = cameraFollower.objToFollow;
-		batteryIcon = Resources.Load("battery");
+	
+		// load battery icons
+		orangeBatteryIcon = Resources.Load("orangeBatteryTex");
+		blueBatteryIcon = Resources.Load("blueBatteryTex");
+		neutralBatteryIcon = Resources.Load("neutralBatteryTex");
+		
+		// default icon is neutral
+		batteryIcon = neutralBatteryIcon;
 	}
 	else {
 		GetComponent(TransformInterpolater).enabled = false;
@@ -40,12 +52,15 @@ function Start() {
 		
 		if(atHome)
 			rigidbody.isKinematic = true;
+		
+		// Set team on clients so color registers
+		networkView.RPC("SetTeam",RPCMode.All,controllingTeam);
 	}
 }
 
 function OnGUI() {
 	if( Network.isClient ) {
-		var iconPositionWorldCoords : Vector3 = transform.position + (5 * Vector3.up);
+		var iconPositionWorldCoords : Vector3 = transform.position + (20 * Vector3.up);
 		var iconPositionScreenCoords = mainCamera.WorldToScreenPoint(iconPositionWorldCoords);
 	
 		if(iconPositionScreenCoords.z > 0) {
@@ -91,11 +106,25 @@ function AttachReturningFlag(viewID : NetworkViewID) {
 	NetworkView.Find(viewID).gameObject.AddComponent(ReturningFlag);
 }
 
-/* Server Side Handles:
+@RPC
+function SetTeam(team : int) {
+	Debug.LogError("SettingTeam " + team);
+	switch(team) {
+	case 0 : batteryIcon = orangeBatteryIcon; break;
+	case 1 : batteryIcon = blueBatteryIcon; break;
+	case -1 : batteryIcon = neutralBatteryIcon; break;
+	default : break;
+	}
+}
+
+/*********************
+
+	Server Side Handles:
 	- Capture Trigger
 	- Return Trigger
 	These triggers won't happen on clients because the collider has been removed
-	*/
+	
+	******************/
 
 function OnTriggerStay(other : Collider) {
 	var otherPlayerData = other.GetComponent(PlayerData);

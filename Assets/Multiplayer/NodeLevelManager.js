@@ -26,11 +26,11 @@ class NodeLevelManager extends LevelManager {
 			if(Mathf.Abs(score) >= VICTORY_SCORE) {
 				if(score < 0) {
 					Debug.Log("RED TEAM WINS");
-					// TODO make team winning stuff
+					FinishGameWithMessageAndReturnToLobby("RED TEAM WINS!!!");
 				}
 				else {
 					Debug.Log("BLUE TEAM WINS");
-					// TODO make team winning stuff
+					FinishGameWithMessageAndReturnToLobby("BLUE TEAM WINS!!!");
 				}
 			}
 		}

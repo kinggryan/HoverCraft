@@ -10,6 +10,7 @@
 var maxNumberOfPlayers = 6;
 var playerStartPositions : Vector3[];
 var playersInGameCount = 0;
+var GAME_END_MESSAGE_DISPLAY_TIME = 4.5;
 
 function Start() {
 	if(NetworkManager.inServerMode) {
@@ -19,6 +20,12 @@ function Start() {
 		networkView.RPC("PlayerJoinedRoom",RPCMode.AllBuffered);
 	}
 }
+
+/****************
+
+	Server-side functions
+	
+	**************/
 
 // Called on server when a player joins the game.
 @RPC
@@ -52,8 +59,6 @@ function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : V
 		
 		// Add player data tracker
 		var playerDataObj : PlayerData = pRoot.GetComponent(PlayerData);
-	//	playerDataObj.player = playerNumberHashtable[i];
-	//	playerDataObj.team = -1;	// signifies unteamed
 		playerDataObj.SetPlayerDataOnAllClients(playerNumberHashtable[i],-1);
 		
 		// add hovercontroller and set camera for player
@@ -62,6 +67,9 @@ function BuildAllPlayerMachines(playerNumberHashtable : Hashtable, positions : V
 		var controller : HoverControllerNetwork = plate.AddComponent(HoverControllerNetwork);
 		Debug.LogError("plate : "+ plate);
 		controller.controller = playerNumberHashtable[i];
+		
+		// Set controller of machine
+		pRoot.networkView.RPC("SetControllerOfMachine",RPCMode.All,playerNumberHashtable[i]);
 
 		networkView.RPC("SetCameraForPlayer",RPCMode.All,playerNumberHashtable[i],plate.networkView.viewID);
 	}
@@ -103,11 +111,32 @@ function BuildMachineForPlayer(player : NetworkPlayer, position : Vector3, rotat
 		networkView.RPC("PurgeClientSideComponents",RPCMode.Others,piece.networkView.viewID);
 }
 
+// Called when the game ends. Displays a message and, after some set time, returns to the game lobby
+function FinishGameWithMessageAndReturnToLobby(message : String) {
+	networkView.RPC("ShowMessageForTime",RPCMode.Others,message,GAME_END_MESSAGE_DISPLAY_TIME);
+	yield WaitForSeconds(GAME_END_MESSAGE_DISPLAY_TIME + 1.0);	// add a second to account for latency, I suppose
+	networkView.RPC("GoToLobby",RPCMode.All);
+}
+
 @RPC
 function RepairMachine(originalChasis : NetworkViewID, player : NetworkPlayer, position : Vector3, rotation: Quaternion) {
 	DestroyMachineAcrossNetwork(NetworkView.Find(originalChasis).gameObject);
 	BuildMachineForPlayer(player, position, rotation);
 }
+
+// Kill the server if a player disconnects and there are no players left in the game aside from the server
+function OnPlayerDisconnected(player : NetworkPlayer) {
+	Debug.LogError("num players " +Network.connections.Length);
+	if(Network.isServer && Network.connections.Length == 1) {
+		Application.Quit();
+	}
+}
+
+/****************
+
+	Client-side Functions
+	
+	*************/
 
 @RPC
 function SetCameraForPlayer(player : NetworkPlayer, viewID : NetworkViewID) {
@@ -132,4 +161,14 @@ function PurgeClientSideComponents(viewID : NetworkViewID) {
 		piece.Destroy(piece.GetComponent(Connector));
 		piece.Destroy(piece.GetComponent(BattleManager));
 	}
+}
+
+@RPC
+function ShowMessageForTime(message : String, time : float) {
+	HUDManager.ShowTextForTime(message,time);
+}
+
+@RPC
+function GoToLobby() {
+	Application.LoadLevel(LevelDictionary.GAME_LOBBY);
 }
