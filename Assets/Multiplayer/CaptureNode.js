@@ -125,7 +125,7 @@ function OnTriggerEnter(other : Collider) {
 
  	 Client-Side handles:
 	- Change visuals on captured node
-	- start repair sequence when clicked
+	- Show timer and home node icon, if needed
 	
 	**********************/
 	
@@ -137,22 +137,6 @@ function ChangeTeam(team : int, showText : boolean) {
 		case  1 : renderer.material.SetColor("_Color",Color.blue); HUDManager.ShowText("Captured for Blue!"); break;
 		default : break;
 	}
-}
-
-function OnMouseDown() {
-	for(var currObj in GameObject.FindGameObjectsWithTag("piece")) {
-		var controller : HoverControllerNetwork = currObj.GetComponent(HoverControllerNetwork);
-		if(controller != null) 
-	//		controller.controller == Network.player && 
-	//		(currObj.transform.position - transform.position).magnitude < MAXIMUM_REPAIR_DISTANCE &&
-		{
-			var machPieces : MachinePieceAttachments = currObj.GetComponent(MachinePieceAttachments);
-			var chasis = machPieces.connectedObjects[0]; 
-			
-			chasis.AddComponent(MachineRepairer);
-		}
-	}
-	
 }
 
 @RPC

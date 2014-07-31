@@ -95,6 +95,7 @@
 'Assets/Multiplayer/HUD/HUDManager.js'
 'Assets/Multiplayer/HUD/HUDText.js'
 'Assets/Multiplayer/LevelManager.js'
+'Assets/Multiplayer/MachineRepairActivator.js'
 'Assets/Multiplayer/MachineRepairer.js'
 'Assets/Multiplayer/MultiplayerGUI.js'
 'Assets/Multiplayer/Networking/BattleAppearanceManagerNetworked.js'

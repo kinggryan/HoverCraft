@@ -1,13 +1,11 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Menu/GameLobby/GameLobbyGUI.js">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Multiplayer/MachineRepairActivator.js">
     <Files>
-      <File FileName="Assets/RobotPieces/Activators/TargettingActivatorNetworked.js" Line="103" Column="26" />
-      <File FileName="Assets/RobotPieces/Activators/TargetterNetworked.js" Line="1" Column="1" />
-      <File FileName="Assets/GameCamera/TargettingCameraNetwork.js" Line="1" Column="1" />
-      <File FileName="Assets/RobotPieces/Activators/TargettingActivator.js" Line="1" Column="1" />
-      <File FileName="Assets/Menu/GameLobby/GameLobbyGUI.js" Line="60" Column="1" />
-      <File FileName="Assets/Multiplayer/Networking/MachineDesignNetworkManager.js" Line="9" Column="35" />
+      <File FileName="Assets/Multiplayer/LevelManager.js" Line="1" Column="1" />
+      <File FileName="Assets/Multiplayer/Flag/CapturableFlag.js" Line="1" Column="1" />
+      <File FileName="Assets/Multiplayer/CaptureNode.js" Line="10" Column="113" />
+      <File FileName="Assets/Multiplayer/MachineRepairActivator.js" Line="8" Column="50" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
