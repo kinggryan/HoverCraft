@@ -105,9 +105,15 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 			pView.RPC("KillServer",PhotonTargets.All);
 		}
 		
-		if(PhotonNetwork.inRoom)
+		if(PhotonNetwork.inRoom) {
 			// display # of players in room -1 (since the server should not count)
-			GUI.Label(Rect(200,50,50,50),"Player Count : " + (PhotonNetwork.room.playerCount - 1));
+			GUI.Label(Rect(200,50,50,50),"Player Count : " + (PhotonNetwork.room.playerCount - 1) + PhotonNetwork.room);
+			var yPlacement = 100;
+			for(var i = 0; i < PhotonNetwork.room.playerCount; i++) {
+				GUI.Label(Rect(200,yPlacement,50,50),"Player: " + PhotonNetwork.playerList[i].ID + " local: "+PhotonNetwork.playerList[i].isLocal);
+				yPlacement += 50;
+			}
+		}
 		else
 			GUI.Label(Rect(200,50,50,50),"Not in room");
 		
@@ -195,6 +201,7 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 	
 	@RPC
 	function StartLevel(levelIndex : int) {
+		Debug.LogError("Starting Level : " +levelIndex);
 		Application.LoadLevel(levelIndex);
 	}
 	

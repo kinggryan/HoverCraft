@@ -5,33 +5,64 @@
 //		When clicked by a player, if that player's machine is close enough, this will 
 //			connect a machine repairer component to that machine
 	
-public var MAXIMUM_REPAIR_DISTANCE : float = 8.0;
-	
-function Start() {
-	Debug.LogError("Starting");
-}
-	
-function OnMouseDown() {
-	// look in pieces for plates
-	Debug.LogError("clicked");
-	for(var currObj in GameObject.FindGameObjectsWithTag("piece")) {
-		var controller : HoverControllerNetwork = currObj.GetComponent(HoverControllerNetwork);
+public var relatedCaptureNode : CaptureNode;
+
+private var displayGUI : boolean = false;
+
+/**************
+
+	Server Side :
+		- Tells client when machine has entered or exited
 		
-		// if this is a plate and it's controlled by me, and the plate is close enough, then repair
-		if(controller != null )// &&
-	//		controller.controller == Network.player && 
-	//		(currObj.transform.position - transform.position).magnitude < MAXIMUM_REPAIR_DISTANCE)
-		{
-			var machPieces : MachinePieceAttachments = currObj.GetComponent(MachinePieceAttachments);
-			var chasis = machPieces.connectedObjects[0]; 
-			
-			chasis.AddComponent(MachineRepairer);
+	*****************/
+
+function OnTriggerEnter(other : Collider) {
+	if(Network.isServer) {
+		var pData = other.GetComponent(PlayerData) as PlayerData;
+
+		if(pData != null && pData.team == relatedCaptureNode.controllingTeam) {	
+			networkView.RPC("PlayerEntered",RPCMode.Others,pData.player);
 		}
 	}
 }
 
-// When moused over, should display text that says "Begin Repair" that is blue when close enough and red when too far away.
-//  beyond a certin distance, don't display this text
-function OnMouseOver() {
+function OnTriggerExit(other : Collider) {
+	if(Network.isServer) {
+		var pData = other.GetComponent(PlayerData) as PlayerData;
 
+		if(pData != null && pData.team == relatedCaptureNode.controllingTeam)
+			networkView.RPC("PlayerExited",RPCMode.Others,pData.player);
+	}
+}
+
+/************
+
+	Client Side:
+		- Creates GUI element while player is inside
+		
+	*************/
+	
+@RPC
+function PlayerEntered(player : NetworkPlayer) {
+	if(player == Network.player) {
+		displayGUI = true;
+	}
+}
+
+@RPC
+function PlayerExited(player : NetworkPlayer) {
+	if(player == Network.player)
+		displayGUI = false;
+}
+
+function OnGUI() {
+	if(displayGUI) {
+		if(GUI.Button(Rect(15,75,50,50),"REPAIR")) {
+			var chasisObj : GameObject = PlayerData.GetPlayerData(Network.player).gameObject;
+			
+			// if they don't have a repairer already, add one
+			if(chasisObj.GetComponent(MachineRepairer) == null)
+				chasisObj.AddComponent(MachineRepairer);
+		}
+	}
 }

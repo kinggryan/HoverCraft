@@ -4,7 +4,7 @@
 function OnGUI() {
 	var middle = Screen.width / 2;
 	
-	GUI.Label(Rect(middle-100,25,200,100),"Makeshift Coliseum");
+	GUI.Label(Rect(middle-100,25,200,100),"HOVERCRAFT : Improvised Warfare");
 	
 	if(GUI.Button(Rect(middle - 100,125,200,100),"Build"))
 		Application.LoadLevel(LevelDictionary.BUILD_MENU);

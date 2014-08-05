@@ -43,14 +43,12 @@ function OnSerializeNetworkView(stream : BitStream, info : NetworkMessageInfo) {
 	var tempY : float;
 
 	if (stream.isWriting) {
-		Debug.LogError("writing...");
 		tempX = rotationX;
 		tempY = rotationY;
 		stream.Serialize(tempX);
 		stream.Serialize(tempY);
 	} 
 	else {
-		Debug.LogError("reading...");
 		tempX = 0;
 		tempY = 0;
 		stream.Serialize(tempX);

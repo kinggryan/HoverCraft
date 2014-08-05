@@ -138,12 +138,4 @@ class TransformInterpolater extends MonoBehaviour
             transform.rotation = latest.rot;
         }
     }
-    
-    function OnDisable() {
-    	Debug.LogError(gameObject + " disabled");
-    }
-    
-    function OnDestroy() {
-    	Debug.LogError(gameObject + " destroyed");
-    }
 }

@@ -81,12 +81,27 @@ class PlayerData extends MonoBehaviour {
 	@RPC
 	function SetTeamOnClient(newTeam : int) {
 		team = newTeam;
+		
+		ChangeTeamColor(team);
 	}
 
 	@RPC
 	function SetPlayerDataOnClient(newPlayer : NetworkPlayer, newTeam : int) {
 		player = newPlayer;
 		team = newTeam;
+		
+		ChangeTeamColor(team);
+	}
+	
+	function ChangeTeamColor(team : int) {
+		Debug.LogError("Changing Team Color to " + team + " game object " + gameObject);
+	
+		switch(team) {
+			case 0: renderer.material = Resources.Load("OrangeMetalMaterial") as Material; break;
+			case 1: renderer.material = Resources.Load("BlueMetalMaterial") as Material; break;
+			case -1: break;
+			default: break;
+		}
 	}
 
 	// This syncs the player and team

@@ -109,6 +109,9 @@ class NodeLevelManager extends LevelManager {
 	
 	@RPC
 	function AssignPlayerToTeam(player : NetworkPlayer, team : int) {
+		var pData = PlayerData.GetPlayerData(player);
+		pData.SetPlayerDataOnAllClients(player,team);
+	
 		if(team == 0) {
 			RedTeam.Add(player);
 			Debug.LogError("Player : " +player+" joined red team");

@@ -16,6 +16,10 @@ function Start() {
 }
 
 function OnGUI() {
+	if(GUI.Button(Rect(200,25,50,50),"Back")) {
+		Application.LoadLevel(LevelDictionary.BUILD_MENU);
+	}
+
 	saveFileName = GUI.TextField(Rect(25,85,150,25),saveFileName,25);
 	if(GUI.Button(Rect(25,25,150,50),"Save Design")) {
 		MachineDesignManager.SaveMachineDesign(saveFileName);
