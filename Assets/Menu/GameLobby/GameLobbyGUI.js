@@ -100,9 +100,14 @@ class GameLobbyGUI extends Photon.MonoBehaviour {
 	}
 	
 	function OnGUI() {
-		if(GUI.Button(Rect(15,15,200,100),"Kill Server")) {
-			var pView : PhotonView = GetComponent("PhotonView");
-			pView.RPC("KillServer",PhotonTargets.All);
+		// Back Button
+		if(GUI.Button(Rect(15,15,200,100),"Back To Menu")) {
+			if(PhotonNetwork.connected)
+				PhotonNetwork.Disconnect();
+			if(Network.isClient)
+				Network.Disconnect();
+				
+			Application.LoadLevel(LevelDictionary.PLAY_MENU);
 		}
 		
 		if(PhotonNetwork.inRoom) {

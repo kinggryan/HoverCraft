@@ -149,6 +149,7 @@
      <Compile Include="Assets\RobotPieces\MotionControllers\WheelAxisMotionControl3.js" />
      <Compile Include="Assets\RobotPieces\MotionControllers\WheelAxisMotionController.js" />
      <Compile Include="Assets\RobotPieces\Projectiles\BombProjectileManager.js" />
+     <Compile Include="Assets\RobotPieces\Projectiles\ProjectileManagerNetworked.js" />
      <Compile Include="Assets\RobotPieces\Projectiles\RocketProjectileManager.js" />
      <Compile Include="Assets\RobotPieces\TestDummyManager.js" />
      <Compile Include="Assets\Shell.js" />

@@ -81,7 +81,7 @@ class TargettingActivatorNetworked extends Activator {
 	
 	@RPC
 	function AddOrDestroyTargetter(addTargetter : boolean, viewID : NetworkViewID, player: NetworkPlayer) {
-		if(Network.player == player) {
+		if(Network.player == player || Network.isServer) {
 			if(addTargetter) { // add targetter component
 				var targetter = gameObject.AddComponent(TargetterNetworked);
 				var nView : NetworkView = gameObject.AddComponent(NetworkView);

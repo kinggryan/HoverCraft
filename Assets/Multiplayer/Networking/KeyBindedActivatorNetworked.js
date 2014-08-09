@@ -11,6 +11,11 @@ class KeyBindedActivatorNetworked extends Activator {
 	function Start() {
 		if(Network.isServer) {
 			attachedPiece = GetComponent(Connector);
+			
+			// Assign controlling player
+			var pData = GetComponentInParent(PlayerData) as PlayerData;
+			if(pData != null)
+				networkView.RPC("SetController",RPCMode.All,pData.player);
 		}
 		else {
 			GameObject.Find("Main Camera");
@@ -60,7 +65,6 @@ class KeyBindedActivatorNetworked extends Activator {
 	function SetController(player : NetworkPlayer) {
 		if(Network.player == player) {
 			controlledByMe = true;
-			relatedCamera = GameObject.Find("Main Camera");
 		}
 	}
 }

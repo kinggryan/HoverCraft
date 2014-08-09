@@ -26,9 +26,9 @@ public class MultiRocketLauncherConnector extends Connector
 		transform.parent = blockObject.transform;
 		
 		if(Network.isServer)
-			networkView.RPC("AddActivator",RPCMode.All,"TargettingActivatorNetworked","1");
+			networkView.RPC("AddActivator",RPCMode.All,"KeyBindedActivatorNetworked","1");
 		else if(!Network.isClient)
-			gameObject.AddComponent(TargettingActivator).key = "1";
+			gameObject.AddComponent(KeyBindedActivatorNetworked).key = "1";
 			
 		loaded = true;
 	}
@@ -63,7 +63,7 @@ public class MultiRocketLauncherConnector extends Connector
 	
 	function AddActivators() {
 		if(Network.isServer)
-			networkView.RPC("AddActivator",RPCMode.All,"TargettingActivatorNetworked","1");
+			networkView.RPC("AddActivator",RPCMode.All,"KeyBindedActivatorNetworked","1");
 	}
 	
 	function rotate(angleToRotate: float, axis : Vector3)
