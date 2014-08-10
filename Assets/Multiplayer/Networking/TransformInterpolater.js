@@ -7,6 +7,7 @@ class State extends System.ValueType {
 	var timestamp : double;
     var pos : Vector3;
     var rot : Quaternion;
+ //   var vel : Vector3;
 }
 
 class TransformInterpolater extends MonoBehaviour
@@ -45,14 +46,17 @@ class TransformInterpolater extends MonoBehaviour
     {
     	var pos : Vector3;
     	var rot : Quaternion;
+  //  	var vel : Vector3;		// velocity
     	
         // Always send transform (depending on reliability of the network view)
         if (stream.isWriting)
         {
             pos = transform.position;
             rot = transform.rotation;
+  //          vel = rigidbody.velocity;
             stream.Serialize(pos);
             stream.Serialize(rot);
+//            stream.Serialize(vel);
         }
         // When receiving, buffer the information
         else
@@ -60,8 +64,10 @@ class TransformInterpolater extends MonoBehaviour
 			// Receive latest state information
             pos = Vector3.zero;
             rot = Quaternion.identity;
+    //        vel = Vector3.zero;
             stream.Serialize(pos);
             stream.Serialize(rot);
+//            stream.Serialize(vel);
 
             // Shift buffer contents, oldest data erased, 18 becomes 19, ... , 0 becomes 1
             for (var i = m_BufferedState.Length - 1; i >= 1; i--)
@@ -75,6 +81,7 @@ class TransformInterpolater extends MonoBehaviour
             state.timestamp = info.timestamp;
             state.pos = pos;
             state.rot = rot;
+     //       state.vel = vel;
             m_BufferedState[0] = state;
 
             // Increment state count but never exceed buffer size

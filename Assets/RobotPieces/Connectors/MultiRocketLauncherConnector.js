@@ -2,6 +2,7 @@
 
 public var rotationGrabberType : GameObject;
 public var projectileType : GameObject;
+public var networkProjectileType: GameObject;
 public var numberOfRocketsToFire : int = 3;
 public var intraVolleyRocketDelay : float = .15;
 public var reloadTime : float = 1.8;
@@ -26,9 +27,9 @@ public class MultiRocketLauncherConnector extends Connector
 		transform.parent = blockObject.transform;
 		
 		if(Network.isServer)
-			networkView.RPC("AddActivator",RPCMode.All,"KeyBindedActivatorNetworked","1");
+			networkView.RPC("AddActivator",RPCMode.All,"KeyBindedActivatorNetworked","space");
 		else if(!Network.isClient)
-			gameObject.AddComponent(KeyBindedActivatorNetworked).key = "1";
+			gameObject.AddComponent(KeyBindedActivator).key = "space";
 			
 		loaded = true;
 	}
@@ -108,10 +109,10 @@ public class MultiRocketLauncherConnector extends Connector
 			loaded = false;
 			
 			for(var i = 0 ; i < numberOfRocketsToFire ; i++) {
-				var tempObj = Network.Instantiate(projectileType,transform.TransformPoint(-.4 + .8 * (1.0*i) / (numberOfRocketsToFire-1),0,0),transform.rotation,0);
+				var tempObj = Network.Instantiate(networkProjectileType,transform.TransformPoint(-.4 + .8 * (1.0*i) / (numberOfRocketsToFire-1),0,0),transform.rotation,0);
 				tempObj.transform.RotateAround(tempObj.transform.position,transform.forward,maximumSpread - (1.0*i/numberOfRocketsToFire * 2 * maximumSpread));
 				//Debug.Log("Rotating: " + (-maximumSpread + (2.0*i/(numberOfRocketsToFire-1) * maximumSpread)));
-				var tempObjM : RocketProjectileManager = tempObj.GetComponent("RocketProjectileManager");
+				var tempObjM : ProjectileManagerNetworked = tempObj.GetComponent("ProjectileManagerNetworked");
 				tempObjM.relatedBM = GetComponent("BattleManager");
 		//		yield WaitForSeconds(intraVolleyRocketDelay);
 			}

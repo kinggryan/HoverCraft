@@ -72,15 +72,15 @@ function OnCollisionEnter(collision:Collision)
 			}
 		}
 		
-		networkView.RPC("ExplodeOnClients",RPCMode.Others,transform.position);
+		networkView.RPC("ExplodeOnClients",RPCMode.All,transform.position);
 	
-		Network.Destroy(gameObject);
+		gameObject.Destroy(gameObject);
 	}
 }
 
 function FixedUpdate()
 {
-	if(rocketOn)
+	if(Network.isServer && rocketOn)
 		rigidbody.AddRelativeForce(Vector3(0,23,0));
 }
 
@@ -94,4 +94,5 @@ function FixedUpdate()
 @RPC
 function ExplodeOnClients(position: Vector3) {
 	GameObject.Destroy(GameObject.Instantiate(explosionEffect,position,Quaternion.identity),1.5);
+	gameObject.Destroy(gameObject);
 }

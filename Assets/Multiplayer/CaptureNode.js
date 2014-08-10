@@ -48,7 +48,7 @@ function CheckContested() {
 	var tempContested = false;
 	
 	for(var node in adjacentNodes) {
-		if(node.controllingTeam != controllingTeam)
+		if(node.controllingTeam != -1 && node.controllingTeam != controllingTeam)
 			tempContested = true;
 	}
 	
